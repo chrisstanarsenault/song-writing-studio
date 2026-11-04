@@ -1,16 +1,73 @@
+/* Predictable sizing */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* Remove default body spacing */
 body {
   margin: 0;
 }
 
+/* Remove spacing that components should control */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Reset lists explicitly used for navigation */
+ul[role='list'],
+ol[role='list'] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Responsive media */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+/* Form controls inherit app typography */
 button,
 input,
 textarea,
 select {
   font: inherit;
+}
+
+/* Allow long text to wrap */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  overflow-wrap: break-word;
+}
+
+/* Avoid an extra inline gap below audio controls */
+audio {
+  display: block;
 }

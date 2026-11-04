@@ -1,0 +1,47 @@
+.background {
+  background-color: #172238;
+  height: 100vh;
+
+  width: 250px;
+}
+
+.title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 20px 20px 0 20px;
+}
+
+.subtitle {
+  color: #596579;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 34px;
+  padding: 20px 20px 0 20px;
+}
+
+.nav_items {
+  color: #fff;
+  list-style: none;
+  padding: 0;
+
+  li:not(:last-child) {
+    margin-bottom: 20px;
+  }
+}
+
+.nav_item {
+  font-size: 18px;
+  padding: 10px 20px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #9f7bf2;
+  }
+
+  &[aria-current="page"] {
+    background-color: #6746D8;
+  }
+}
