@@ -104,7 +104,7 @@ const LibraryPage = () => {
 
           <div className={styles.stats_item}>
             <h4>Completed</h4>
-            <p>0</p>
+            <p>{songs.filter(song => song.status === 'Completed').length}</p>
           </div>
         </section>
 
