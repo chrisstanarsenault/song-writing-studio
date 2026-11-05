@@ -139,3 +139,12 @@
     color: #6746d8;
   }
 }
+
+.content table td a {
+  color: #202c43;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

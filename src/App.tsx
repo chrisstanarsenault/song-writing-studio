@@ -2,7 +2,7 @@ import { Outlet } from 'react-router'
 
 import styles from './App.module.css'
 
-import { NavBar } from './components/nav-bar/nav-bar'
+import { NavBar } from './globals/components/nav-bar/nav-bar'
 
 function App() {
   return (

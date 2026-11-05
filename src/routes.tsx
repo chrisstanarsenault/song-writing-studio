@@ -1,27 +1,32 @@
-import type {RouteObject} from 'react-router'
+import type { RouteObject } from 'react-router'
 
-import App from "./App";
-import LibraryPage from "./pages/library/library-page";
-import ArchivePage from "./pages/archive/archive-page";
-import SettingsPage from "./pages/settings/settings-page";
+import App from './App'
+import LibraryPage from './pages/library/library-page'
+import ArchivePage from './pages/archive/archive-page'
+import SettingsPage from './pages/settings/settings-page'
+import SongPage from './pages/song/song-page'
 
 export const routes: RouteObject[] = [
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
         index: true,
-        element: <LibraryPage />,
+        element: <LibraryPage />
       },
       {
-        path: "/archive",
-        element: <ArchivePage />,
+        path: '/archive',
+        element: <ArchivePage />
       },
       {
-        path: "/settings",
-        element: <SettingsPage />,
+        path: '/settings',
+        element: <SettingsPage />
       },
-    ],
-  },
-];
+      {
+        path: '/song/:songId',
+        element: <SongPage />
+      }
+    ]
+  }
+]

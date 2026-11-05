@@ -1,16 +1,65 @@
-import Header from '../../components/header/header.tsx'
+import { useEffect, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router'
+
+import { songsTable } from '../../lib/db.ts'
+
+import type { Song } from '../../globals/types/global-types.tsx'
+
+import Header from '../../globals/components/header/header.tsx'
 
 import styles from './library-page.module.css'
 
-const newSongClick = () => {
-  console.log('createNewSong')
-}
-
-const captureIdeaClick = () => {
-  console.log('captureIdea')
-}
-
 const LibraryPage = () => {
+  const navigate = useNavigate()
+
+  const [songs, setSongs] = useState<Song[]>([])
+
+  useEffect(() => {
+    const querySongs = async () => {
+      const songs = await songsTable.toArray()
+      setSongs(songs)
+    }
+    querySongs()
+  }, [])
+
+  const newSongClick = () => {
+    createNewSong()
+  }
+
+  const captureIdeaClick = () => {
+    navigate('/song/new')
+  }
+
+  const createNewSong = async () => {
+    const songId: string = crypto.randomUUID()
+
+    const newSong: Song = {
+      id: songId,
+      title: 'Untitled song',
+      sections: null,
+      status: 'Idea',
+      tags: null,
+      lastEdited: new Date().toISOString(),
+      takes: 0,
+      songKey: null,
+      bpm: null,
+      tuning: null,
+      createdAt: new Date().toISOString(),
+      notes: null
+    }
+
+    try {
+      console.log('Pre Adding song:', newSong)
+      await songsTable.add(newSong)
+      console.log('Post Adding song:', newSong)
+      console.log('Song Fetch:', await songsTable.get(songId))
+
+      navigate(`/song/${newSong.id}`)
+    } catch (error) {
+      console.error('Error adding song:', error)
+    }
+  }
+
   return (
     <div className={styles.background}>
       <Header
@@ -29,7 +78,7 @@ const LibraryPage = () => {
           <select id="status-select" name="status" aria-label="Status">
             <option value="all">All statuses</option>
             <option value="idea">Idea</option>
-            <option value="progress">In progress</option>
+            <option value="in-progress">In progress</option>
             <option value="completed">Completed</option>
             <option value="archived">Archived</option>
           </select>
@@ -45,12 +94,12 @@ const LibraryPage = () => {
         <section className={styles.stats_container}>
           <div className={styles.stats_item}>
             <h4>Total songs</h4>
-            <p>0</p>
+            <p>{songs.length}</p>
           </div>
 
           <div className={styles.stats_item}>
             <h4>In progress</h4>
-            <p>0</p>
+            <p>{songs.filter(song => song.status === 'In progress').length}</p>
           </div>
 
           <div className={styles.stats_item}>
@@ -73,13 +122,19 @@ const LibraryPage = () => {
               </thead>
 
               <tbody>
-                <tr>
-                  <td>Song 1</td>
-                  <td>Idea</td>
-                  <td>Tag 1, Tag 2</td>
-                  <td>2026-01-01</td>
-                  <td>1</td>
-                </tr>
+                {songs.map(song => {
+                  return (
+                    <tr key={song.id}>
+                      <td>
+                        <NavLink to={`/song/${song.title}`}>{song.title}</NavLink>
+                      </td>
+                      <td>{song.status}</td>
+                      <td>{song.tags?.join(', ') || 'No tags'}</td>
+                      <td>{new Date(song.lastEdited).toLocaleDateString()}</td>
+                      <td>{song.takes}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </section>
