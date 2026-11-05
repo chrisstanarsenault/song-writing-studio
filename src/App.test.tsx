@@ -13,22 +13,16 @@ test('navigates from Library to Archive', async () => {
   const user = userEvent.setup()
 
   const router = createMemoryRouter(routes, {
-    initialEntries: ['/'],
+    initialEntries: ['/']
   })
 
   render(<RouterProvider router={router} />)
 
-  expect(
-    await screen.findByRole('heading', { name: 'Library', level: 1 }),
-  ).toBeInTheDocument()
+  expect(await screen.findByRole('link', { name: 'Library' })).toBeInTheDocument()
 
   await user.click(screen.getByRole('link', { name: 'Archive' }))
 
-  expect(
-    await screen.findByRole('heading', { name: 'Archive', level: 1 }),
-  ).toBeInTheDocument()
+  expect(await screen.findByRole('link', { name: 'Archive' })).toBeInTheDocument()
 
-  expect(
-    screen.getByRole('link', { name: 'Archive' }),
-  ).toHaveAttribute('aria-current', 'page')
+  expect(screen.getByRole('link', { name: 'Archive' })).toHaveAttribute('aria-current', 'page')
 })

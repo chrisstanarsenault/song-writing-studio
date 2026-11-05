@@ -1,19 +1,26 @@
+import Header from '../../components/header/header.tsx'
+
 import styles from './library-page.module.css'
+
+const newSongClick = () => {
+  console.log('createNewSong')
+}
+
+const captureIdeaClick = () => {
+  console.log('captureIdea')
+}
 
 const LibraryPage = () => {
   return (
     <div className={styles.background}>
-      <section className={styles.header_container}>
-        <div>
-          <h2>Song Library</h2>
-          <h3>Your songs, words and melodies, together.</h3>
-        </div>
-
-        <div className={styles.buttons_container}>
-          <button>+ New song</button>
-          <button>Capture idea</button>
-        </div>
-      </section>
+      <Header
+        title="Song Library"
+        description="Your songs, words and melodies, together."
+        buttons={[
+          { title: '+ New song', type: 'primary', onClick: newSongClick },
+          { title: 'Capture idea', type: 'secondary', onClick: captureIdeaClick }
+        ]}
+      />
 
       <section className={styles.grid_container}>
         <section className={styles.search_container}>

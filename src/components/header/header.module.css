@@ -1,0 +1,43 @@
+.header_container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header_container div h2 {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.header_container div h3 {
+  font-size: 16px;
+  font-weight: 400;
+  color: #596579;
+}
+
+.buttons_container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 200px;
+}
+
+button {
+  font-size: 18px;
+  padding: 16px;
+  border-radius: 8px;
+  border: none;
+  text-align: left;
+  font-weight: 500;
+}
+
+button:first-of-type {
+  background-color: #6746d8;
+  color: #fff;
+}
+
+button:last-of-type {
+  background-color: #f0ebfc;
+  color: #6746d8;
+}
