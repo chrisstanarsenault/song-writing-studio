@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router'
 
-import { songsTable } from '../../lib/db.ts'
+import { songsTable, songTagsTable, songStatusesTable } from '../../lib/db.ts'
 
-import type { Song } from '../../globals/types/global-types.tsx'
+import type { Song, SongTag, SongStatus } from '../../globals/types/global-types.tsx'
 
 import Header from '../../globals/components/header/header.tsx'
 
@@ -13,6 +13,8 @@ const LibraryPage = () => {
   const navigate = useNavigate()
 
   const [songs, setSongs] = useState<Song[]>([])
+  const [tags, setTags] = useState<SongTag[]>([])
+  const [statuses, setStatuses] = useState<SongStatus[]>([])
 
   useEffect(() => {
     const querySongs = async () => {
@@ -20,6 +22,18 @@ const LibraryPage = () => {
       setSongs(songs)
     }
     querySongs()
+
+    const queryTags = async () => {
+      const tags = await songTagsTable.toArray()
+      setTags(tags)
+    }
+    queryTags()
+
+    const queryStatuses = async () => {
+      const statuses = await songStatusesTable.toArray()
+      setStatuses(statuses)
+    }
+    queryStatuses()
   }, [])
 
   const newSongClick = () => {
@@ -35,7 +49,7 @@ const LibraryPage = () => {
 
     const newSong: Song = {
       id: songId,
-      title: 'Untitled song',
+      title: 'Untitled_song',
       sections: null,
       status: 'Idea',
       tags: null,
@@ -49,10 +63,7 @@ const LibraryPage = () => {
     }
 
     try {
-      console.log('Pre Adding song:', newSong)
       await songsTable.add(newSong)
-      console.log('Post Adding song:', newSong)
-      console.log('Song Fetch:', await songsTable.get(songId))
 
       navigate(`/song/${newSong.id}`)
     } catch (error) {
@@ -77,17 +88,20 @@ const LibraryPage = () => {
 
           <select id="status-select" name="status" aria-label="Status">
             <option value="all">All statuses</option>
-            <option value="idea">Idea</option>
-            <option value="in-progress">In progress</option>
-            <option value="completed">Completed</option>
-            <option value="archived">Archived</option>
+            {statuses.map(status => (
+              <option key={status.id} value={status.normalizedName}>
+                {status.name}
+              </option>
+            ))}
           </select>
 
           <select id="tags-select" name="tags" aria-label="Tags">
             <option value="all">All tags</option>
-            <option value="tag1">Tag 1</option>
-            <option value="tag2">Tag 2</option>
-            <option value="tag3">Tag 3</option>
+            {tags.map(tag => (
+              <option key={tag.id} value={tag.normalizedName}>
+                {tag.name}
+              </option>
+            ))}
           </select>
         </section>
 

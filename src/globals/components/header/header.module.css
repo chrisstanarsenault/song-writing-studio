@@ -4,16 +4,31 @@
   margin-bottom: 20px;
 }
 
-.header_container div h2 {
+.header_container > div > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header_container > div > div > h2 {
   font-size: 30px;
   font-weight: 600;
   margin-bottom: 10px;
 }
 
-.header_container div h3 {
+.header_container > div > div > h3 {
   font-size: 16px;
   font-weight: 400;
   color: #596579;
+}
+
+.header_container .edit_icon {
+  border-radius: 100%;
+  background-color: #505050;
+  color: #fff;
+  padding: 8px;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .buttons_container {

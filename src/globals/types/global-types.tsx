@@ -1,5 +1,5 @@
 export type LyricSectionType = 'Verse' | 'Chorus' | 'Bridge' | 'Outro' | 'Instrumental' | 'Intro' | 'Custom'
-export type SongStatus = 'Idea' | 'In Progress' | 'Completed' | 'Archived'
+// export type SongStatus = 'Idea' | 'In Progress' | 'Completed' | 'Archived'
 
 export interface LyricSection {
   id: string
@@ -34,4 +34,18 @@ export interface AudioTake {
   mimeType: string
   durationSeconds: number | null
   createdAt: number
+}
+
+export interface SongTag {
+  id: string
+  name: string
+  normalizedName: string
+  createdAt: string
+}
+
+export interface SongStatus {
+  id: string
+  name: string
+  normalizedName: string
+  createdAt: string
 }
