@@ -11,8 +11,6 @@ export const Modal = ({ children }: ModalProps) => {
   if (!container) {
     console.error('Modal portal not found')
     return null
-  } else {
-    console.log('Modal portal found')
   }
 
   return createPortal(children, container)

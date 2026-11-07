@@ -1,22 +1,38 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams } from 'react-router'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import Header from '../../globals/components/header/header'
 import { EditSongDetailsModal } from './components/edit-song-details-modal.tsx'
 
-import { songsTable } from '../../lib/db.ts'
+import { songsTable, songStatusesTable, songTagsTable } from '../../lib/db.ts'
 
-import type { Song } from '../../globals/types/global-types.tsx'
+import type { SongStatus, SongTag } from '../../globals/types/global-types.tsx'
 
 import styles from './song-page.module.css'
 
 const SongPage = () => {
-  const [song, setSong] = useState<Song | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [songDetails, setSongDetails] = useState<Song | null>(null)
-  const [tagsList, setTagsList] = useState<string[] | null>([])
 
   const { songId } = useParams()
+
+  const song = useLiveQuery(async () => {
+    if (!songId) return null
+
+    return (await songsTable.get(songId)) ?? null
+  }, [songId])
+
+  const statuses = useLiveQuery(async () => {
+    const statuses = await songStatusesTable.toArray()
+
+    return statuses.map((status: SongStatus) => status.name)
+  }, [])
+
+  const tags = useLiveQuery(async () => {
+    const tags = await songTagsTable.toArray()
+
+    return tags.map((tag: SongTag) => tag.name)
+  }, [])
 
   const details = useMemo(() => {
     return {
@@ -29,41 +45,15 @@ const SongPage = () => {
     }
   }, [song])
 
-  const formatSongNameForDisplay = (songName: string) => {
-    return songName.replace(/_/g, ' ')
-  }
-
-  const formatSongNameForStorage = (songName: string) => {
-    return songName.replace(/ /g, '_')
-  }
-
-  useEffect(() => {
-    const querySongs = async () => {
-      const songs = await songsTable.toArray()
-      const tags = songs.map((song: Song) => song.tags).flat()
-      const uniqueTags = [...new Set(tags)]
-      setTagsList(uniqueTags as string[])
-
-      const song = songs.find((song: Song) => song.title === songId)
-
-      setSong(song || null)
-    }
-    querySongs()
-  }, [songId])
-
-  if (!song) {
-    return <p>Loading...</p>
-  }
-
   return (
     <div className={styles.background}>
       <Header
-        title={formatSongNameForDisplay(song?.title || 'Untitled songs')}
+        title={song?.title || 'Untitled song'}
         description={song?.status || 'Ideas'}
         editIcon={true}
         editIconOnClick={() => {
           setIsEditing(!isEditing)
-          setSongDetails({ ...song })
+          // setSongDetails({ ...song })
         }}
         buttons={[
           {
@@ -80,82 +70,29 @@ const SongPage = () => {
         <section className={styles.songDetailsSection}>
           <div>
             <p>KEY</p>
-            {!isEditing ? (
-              <p>{songDetails?.songKey || 'Unknown'}</p>
-            ) : (
-              <input
-                value={songDetails?.songKey ?? ''}
-                onChange={event => {
-                  const value = event.target.value
-
-                  setSongDetails(previous =>
-                    previous ? { ...previous, songKey: value === '' ? null : value } : previous
-                  )
-                }}
-              />
-            )}
+            <p>{song?.songKey || 'Unknown'}</p>
           </div>
 
           <div>
             <p>BPM</p>
-            {!isEditing ? (
-              <p>{songDetails?.bpm || 'Unknown'}</p>
-            ) : (
-              <input
-                type="number"
-                value={songDetails?.bpm ?? ''}
-                onChange={event => {
-                  const value = event.target.value
-
-                  setSongDetails(previous =>
-                    previous ? { ...previous, bpm: value === '' ? null : Number(value) } : previous
-                  )
-                }}
-              />
-            )}
+            <p>{song?.bpm || 'Unknown'}</p>
           </div>
 
           <div>
             <p>Tuning</p>
-            {!isEditing ? (
-              <p>{songDetails?.tuning || 'Unknown'}</p>
-            ) : (
-              <input
-                value={songDetails?.tuning ?? ''}
-                onChange={event => {
-                  const value = event.target.value
-
-                  setSongDetails(previous =>
-                    previous ? { ...previous, tuning: value === '' ? null : value } : previous
-                  )
-                }}
-              />
-            )}
+            <p>{song?.tuning || 'Unknown'}</p>
           </div>
         </section>
 
         <section className={styles.songDetailsSection}>
           <div>
             <p>Tags</p>
-            {!isEditing ? (
-              <p>{songDetails?.tags?.join(', ') || 'No tags'}</p>
-            ) : (
-              <select>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-              </select>
-            )}
+            <p>{song?.tags?.join(', ') || 'No tags'}</p>
           </div>
 
           <div>
             <p>Status</p>
-            <select>
-              <option value="idea">Idea</option>
-              <option value="in_progress">In Progress</option>
-              <option value="completed">Completed</option>
-              <option value="archived">Archived</option>
-            </select>
+            <p>{song?.status || 'Unknown'}</p>
           </div>
         </section>
       </section>
@@ -163,9 +100,10 @@ const SongPage = () => {
       {isEditing && (
         <EditSongDetailsModal
           onClose={() => setIsEditing(false)}
+          songId={song?.id || ''}
           details={details}
-          tagsList={tagsList || []}
-          onSave={() => {}}
+          tagsList={tags || []}
+          statusList={statuses || []}
         />
       )}
     </div>

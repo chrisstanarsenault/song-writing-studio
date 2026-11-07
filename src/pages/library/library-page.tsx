@@ -49,7 +49,7 @@ const LibraryPage = () => {
 
     const newSong: Song = {
       id: songId,
-      title: 'Untitled_song',
+      title: 'Untitled song',
       sections: null,
       status: 'Idea',
       tags: null,

@@ -4,6 +4,7 @@ import { IoClose } from 'react-icons/io5'
 import { Modal } from '../../../globals/components/modal-portal/modal-portal'
 
 import type { Song } from '../../../globals/types/global-types'
+import { songsTable } from '../../../lib/db.ts'
 
 import styles from './edit-song-details-modal.module.css'
 
@@ -11,17 +12,46 @@ type Details = Pick<Song, 'title' | 'songKey' | 'bpm' | 'tuning' | 'tags' | 'sta
 
 interface EditSongDetailsModalProps {
   onClose: () => void
+  songId: string
   details: Details
   tagsList: string[]
-  onSave: (details: Details) => void
+  statusList: string[]
 }
 
-export const EditSongDetailsModal = ({ details, onClose, onSave, tagsList }: EditSongDetailsModalProps) => {
+export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, songId }: EditSongDetailsModalProps) => {
   const [formData, setFormData] = useState<Details>(details)
+  const [selectedTag, setSelectedTag] = useState<string>('')
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAddTag = (tag: string) => {
+    if (!tag) return
+
+    setFormData(previous => ({
+      ...previous,
+      tags: previous.tags?.includes(tag) ? previous.tags : [...(previous.tags ?? []), tag]
+    }))
+
+    setSelectedTag('')
+  }
+
+  const handleRemoveTag = (tag: string) => {
+    setFormData(previous => ({
+      ...previous,
+      tags: (previous.tags ?? []).filter(item => item !== tag)
+    }))
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    onSave(formData)
+
+    try {
+      const updatedCount = await songsTable.update(songId, { ...formData })
+
+      if (updatedCount) {
+        onClose()
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -32,18 +62,18 @@ export const EditSongDetailsModal = ({ details, onClose, onSave, tagsList }: Edi
             <IoClose />
           </button>
 
-          <div className=".modal-content-container">
+          <div className={styles.modalContentContainer}>
             <h1>Edit Details</h1>
             <div className={styles.modalContent}>
               <div className={styles.modalContentItem}>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className={styles.modalContentForm}>
                   <div className={styles.modalContentItem}>
                     <label htmlFor="title">Title</label>
                     <input
                       type="text"
                       id="title"
-                      value={details.title}
-                      onChange={event => onSave({ ...details, title: event.target.value })}
+                      value={formData.title ?? ''}
+                      onChange={event => setFormData({ ...formData, title: event.target.value ?? '' })}
                     />
                   </div>
 
@@ -53,7 +83,7 @@ export const EditSongDetailsModal = ({ details, onClose, onSave, tagsList }: Edi
                       type="text"
                       id="songKey"
                       value={formData.songKey ?? ''}
-                      onChange={event => setFormData({ ...formData, songKey: event.target.value })}
+                      onChange={event => setFormData({ ...formData, songKey: event.target.value ?? '' })}
                     />
                   </div>
 
@@ -75,38 +105,70 @@ export const EditSongDetailsModal = ({ details, onClose, onSave, tagsList }: Edi
                       type="text"
                       id="tuning"
                       value={formData.tuning ?? ''}
-                      onChange={event => setFormData({ ...formData, tuning: event.target.value })}
+                      onChange={event => setFormData({ ...formData, tuning: event.target.value ?? '' })}
                     />
                   </div>
 
                   <div className={styles.modalContentItem}>
                     <label htmlFor="tags">Tags</label>
+                    <div>
+                      <select id="tags" value={selectedTag} onChange={event => setSelectedTag(event.target.value)}>
+                        <option value="">Choose a tag</option>
+
+                        {tagsList.map(tag => (
+                          <option key={tag} value={tag}>
+                            {tag}
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        type="button"
+                        disabled={!selectedTag || (formData.tags ?? []).includes(selectedTag)}
+                        onClick={() => handleAddTag(selectedTag)}
+                      >
+                        Add Tag
+                      </button>
+                    </div>
+
+                    <div>
+                      {formData.tags?.map(tag => {
+                        return (
+                          <div key={tag} className={styles.selectedTagItem}>
+                            <p>{tag}</p>
+
+                            <button type="button" onClick={() => handleRemoveTag(tag)}>
+                              x
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className={styles.modalContentItem}>
+                    <label htmlFor="status">Status</label>
                     <select
-                      id="tags"
-                      value={formData.tags?.join(', ') ?? ''}
-                      onChange={event => setFormData({ ...formData, tags: event.target.value.split(', ') })}
+                      id="status"
+                      value={formData.status ?? ''}
+                      onChange={event => setFormData({ ...formData, status: event.target.value })}
                     >
-                      {tagsList.map(tag => (
-                        <option key={tag} value={tag}>
-                          {tag}
+                      {statusList.map(status => (
+                        <option key={status} value={status}>
+                          {status}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  <div className={styles.modalContentItem}>
-                    <label htmlFor="status">Status</label>
-                    <input
-                      type="text"
-                      id="status"
-                      value={details.status}
-                      onChange={event => onSave({ ...details, status: event.target.value })}
-                    />
-                  </div>
+                  <button type="submit" className={styles.submitButton} onClick={() => handleSubmit}>
+                    Update Song
+                  </button>
                 </form>
               </div>
             </div>
           </div>
+          {JSON.stringify(formData)}
         </div>
       </section>
     </Modal>
