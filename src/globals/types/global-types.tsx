@@ -49,3 +49,25 @@ export interface SongStatus {
   normalizedName: string
   createdAt: string
 }
+
+export interface RecordingDetails {
+  id: string
+  songId: string
+  sectionId: string | null // null means entire song
+  name: string
+  duration: number | null
+  createdAt: string
+}
+
+export interface RecordingAudio {
+  recordingId: string
+  audioBlob: Blob
+}
+
+export interface NotesDetails {
+  id: string
+  songId: string
+  sectionId: string | null // null means entire song
+  content: string
+  createdAt: string
+}

@@ -6,6 +6,13 @@
   flex-direction: column;
 }
 
+.fullSongContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
 .songDetailsContainer {
   display: flex;
   justify-content: space-between;
@@ -40,4 +47,34 @@
     font-weight: 600;
     color: #000;
   }
+}
+
+.lyricsRecordingContainer {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+
+  .lyricsContainer {
+    width: 70%;
+
+    .lyricsItem {
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 16px;
+      background: #fff;
+
+      &:nth-child(even) {
+        background: #f0ebfc;
+      }
+    }
+  }
+}
+
+.recordingContainer {
+  width: 30%;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
 }

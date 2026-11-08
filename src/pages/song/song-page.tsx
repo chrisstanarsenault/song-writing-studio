@@ -3,7 +3,8 @@ import { useParams } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
 
 import Header from '../../globals/components/header/header'
-import { EditSongDetailsModal } from './components/edit-song-details-modal.tsx'
+import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-details-modal.tsx'
+import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
 
 import { songsTable, songStatusesTable, songTagsTable } from '../../lib/db.ts'
 
@@ -53,7 +54,6 @@ const SongPage = () => {
         editIcon={true}
         editIconOnClick={() => {
           setIsEditing(!isEditing)
-          // setSongDetails({ ...song })
         }}
         buttons={[
           {
@@ -66,34 +66,46 @@ const SongPage = () => {
         ]}
       />
 
-      <section className={styles.songDetailsContainer}>
-        <section className={styles.songDetailsSection}>
-          <div>
-            <p>KEY</p>
-            <p>{song?.songKey || 'Unknown'}</p>
-          </div>
+      <section className={styles.fullSongContainer}>
+        <div className={styles.songDetailsContainer}>
+          <section className={styles.songDetailsSection}>
+            <div>
+              <p>KEY</p>
+              <p>{song?.songKey || 'Unknown'}</p>
+            </div>
 
-          <div>
-            <p>BPM</p>
-            <p>{song?.bpm || 'Unknown'}</p>
-          </div>
+            <div>
+              <p>BPM</p>
+              <p>{song?.bpm || 'Unknown'}</p>
+            </div>
 
-          <div>
-            <p>Tuning</p>
-            <p>{song?.tuning || 'Unknown'}</p>
-          </div>
-        </section>
+            <div>
+              <p>Tuning</p>
+              <p>{song?.tuning || 'Unknown'}</p>
+            </div>
+          </section>
 
-        <section className={styles.songDetailsSection}>
-          <div>
-            <p>Tags</p>
-            <p>{song?.tags?.join(', ') || 'No tags'}</p>
-          </div>
+          <section className={styles.songDetailsSection}>
+            <div>
+              <p>Tags</p>
+              <p>{song?.tags?.join(', ') || 'No tags'}</p>
+            </div>
 
-          <div>
-            <p>Status</p>
-            <p>{song?.status || 'Unknown'}</p>
-          </div>
+            <div>
+              <p>Status</p>
+              <p>{song?.status || 'Unknown'}</p>
+            </div>
+          </section>
+        </div>
+
+        <section className={styles.lyricsRecordingContainer}>
+          <section className={styles.lyricsContainer}>
+            <LyricContainer />
+          </section>
+
+          <section className={styles.recordingContainer}>
+            <p>Recording</p>
+          </section>
         </section>
       </section>
 
