@@ -21,19 +21,16 @@ const SongPage = () => {
 
   const song = useLiveQuery(async () => {
     if (!songId) return null
-
     return (await songsTable.get(songId)) ?? null
   }, [songId])
 
   const statuses = useLiveQuery(async () => {
     const statuses = await songStatusesTable.toArray()
-
     return statuses.map((status: SongStatus) => status.name)
   }, [])
 
   const tags = useLiveQuery(async () => {
     const tags = await songTagsTable.toArray()
-
     return tags.map((tag: SongTag) => tag.name)
   }, [])
 
@@ -49,6 +46,58 @@ const SongPage = () => {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const handleMoveDown = (id: string) => {
+    const sectionIndex = song?.sections?.findIndex(section => section.id === id)
+
+    if (
+      sectionIndex === undefined ||
+      sectionIndex === null ||
+      (song?.sections?.length && sectionIndex === song?.sections?.length - 1)
+    )
+      return
+
+    const newSections = [...(song?.sections ?? [])]
+    const temp = newSections[sectionIndex]
+
+    newSections[sectionIndex] = newSections[sectionIndex + 1]
+    newSections[sectionIndex + 1] = temp
+
+    songsTable.update(song?.id || '', { sections: newSections })
+  }
+
+  const handleMoveUp = (id: string) => {
+    const sectionIndex = song?.sections?.findIndex(section => section.id === id)
+
+    if (sectionIndex === undefined || sectionIndex === null || (song?.sections?.length && sectionIndex === 0)) return
+
+    const newSections = [...(song?.sections ?? [])]
+    const temp = newSections[sectionIndex]
+
+    newSections[sectionIndex] = newSections[sectionIndex - 1]
+    newSections[sectionIndex - 1] = temp
+
+    songsTable.update(song?.id || '', { sections: newSections })
+  }
+
+  const handleEdit = (id: string) => {
+    console.log('Edit', id)
+  }
+
+  const handleDelete = (id: string) => {
+    const selectionIndex = song?.sections?.findIndex(section => section.id === id)
+
+    if (selectionIndex === undefined || selectionIndex === null) return
+
+    const newSections = [...(song?.sections ?? [])]
+    newSections.splice(selectionIndex, 1)
+
+    songsTable.update(song?.id || '', { sections: newSections })
+  }
+
+  const handleRecordingNotes = (id: string) => {
+    console.log('Recording notes', id)
   }
 
   const details = useMemo(() => {
@@ -117,7 +166,15 @@ const SongPage = () => {
         <section className={styles.lyricsRecordingContainer}>
           <section className={styles.lyricsContainer}>
             {song?.sections?.map(section => (
-              <LyricContainer key={section.id} {...section} />
+              <LyricContainer
+                key={section.id}
+                {...section}
+                onMoveDown={() => handleMoveDown(section.id)}
+                onMoveUp={() => handleMoveUp(section.id)}
+                onEdit={() => handleEdit(section.id)}
+                onDelete={() => handleDelete(section.id)}
+                onRecordingNotes={() => handleRecordingNotes(section.id)}
+              />
             ))}
 
             <button type="button" className={styles.addAnotherSectionButton} onClick={() => setIsAddingNewLyric(true)}>

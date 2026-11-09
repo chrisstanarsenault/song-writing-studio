@@ -8,45 +8,77 @@ import type { RecordingDetails, NotesDetails } from '../../../../globals/types/g
 import styles from './lyric-container.module.css'
 
 interface LyricContainerProps {
-  title?: string
-  chords?: string[]
+  id: string
+  title: string
+  chords: string[]
   index?: number
-  lyrics?: string
+  lyrics: string
   linkedRecording?: RecordingDetails | null
   linkedNotes?: NotesDetails | null
+  onMoveDown: () => void
+  onMoveUp: () => void
+  onEdit: () => void
+  onDelete: () => void
+  onRecordingNotes: () => void
 }
 
 export const LyricContainer = ({
+  id,
   title = 'Verse 1',
   chords = ['G', 'D', 'Em', 'C'],
   index = 1,
   lyrics = 'Lyrics lyrics lyrics lyrics',
   linkedRecording = null,
-  linkedNotes = null
+  linkedNotes = null,
+  onMoveDown,
+  onMoveUp,
+  onEdit,
+  onDelete,
+  onRecordingNotes
 }: LyricContainerProps) => {
+  const handleMoveDown = () => {
+    onMoveDown()
+  }
+
+  const handleMoveUp = () => {
+    onMoveUp()
+  }
+
+  const handleEdit = () => {
+    onEdit()
+  }
+
+  const handleDelete = () => {
+    onDelete()
+  }
+
+  const handleRecordingNotes = () => {
+    onRecordingNotes()
+  }
+
   return (
     <section className={styles.lyricContainer}>
       <div className={styles.lyricHeader}>
         <p>{title}</p>
 
         <div className={styles.lyricHeaderActions}>
-          <button type="button">
+          <button type="button" onClick={() => handleMoveDown()}>
             <FaArrowDown />
           </button>
 
-          <button type="button">
+          <button type="button" onClick={() => handleMoveUp()}>
             <FaArrowUp />
           </button>
 
-          <button type="button">
+          <button type="button" onClick={() => handleEdit()}>
             <MdEdit />
           </button>
 
-          <button type="button">
+          <button type="button" onClick={() => handleDelete()}>
             <IoTrashOutline />
           </button>
 
-          <button type="button">
+          <button type="button" onClick={() => handleRecordingNotes()}>
             <IoIosMore />
           </button>
         </div>
