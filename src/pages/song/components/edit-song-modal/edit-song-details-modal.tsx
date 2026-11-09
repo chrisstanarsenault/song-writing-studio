@@ -63,7 +63,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
           </button>
 
           <div className={styles.modalContentContainer}>
-            <h1>Edit Details</h1>
+            <h3>Edit Details</h3>
             <div className={styles.modalContent}>
               <div className={styles.modalContentItem}>
                 <form onSubmit={handleSubmit} className={styles.modalContentForm}>
@@ -138,7 +138,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                             <p>{tag}</p>
 
                             <button type="button" onClick={() => handleRemoveTag(tag)}>
-                              x
+                              X
                             </button>
                           </div>
                         )
@@ -168,7 +168,6 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
               </div>
             </div>
           </div>
-          {JSON.stringify(formData)}
         </div>
       </section>
     </Modal>

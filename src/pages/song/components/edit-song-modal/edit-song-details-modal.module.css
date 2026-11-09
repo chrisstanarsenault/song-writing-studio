@@ -30,6 +30,7 @@
   font-size: 30px;
   color: black;
   background-color: #fff;
+  padding: 0;
 }
 
 .modalContentContainer {
@@ -95,16 +96,18 @@
     display: flex;
     align-self: flex-start;
     gap: 15px;
-    background-color: #f0ebfc;
+    background: #f0ebfc;
     border-radius: 20px;
     padding: 10px 15px;
-    color: #000;
+    color: #6746d8;
+    width: fit-content;
+    flex: 0 1 auto;
 
     & button {
       background-color: transparent;
       padding: 0;
       border: none;
-      color: #000;
+      color: #6746d8;
     }
   }
 }

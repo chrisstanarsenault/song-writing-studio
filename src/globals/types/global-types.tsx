@@ -1,18 +1,16 @@
-export type LyricSectionType = 'Verse' | 'Chorus' | 'Bridge' | 'Outro' | 'Instrumental' | 'Intro' | 'Custom'
-// export type SongStatus = 'Idea' | 'In Progress' | 'Completed' | 'Archived'
-
-export interface LyricSection {
+export interface LyricsSection {
   id: string
-  type: LyricSectionType
   title: string
   lyrics: string
-  chords: string
+  chords: string[]
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Song {
   id: string
   title: string
-  sections: LyricSection[] | null
+  sections: LyricsSection[] | null
   status: string
   tags: string[] | null
   lastEdited: string

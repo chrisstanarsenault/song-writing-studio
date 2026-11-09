@@ -1,0 +1,120 @@
+.newLyricModalOuterContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.newLyricModalInnerContainer {
+  position: relative;
+  width: min(600px, calc(100% - 32px));
+  height: auto;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+
+  .newLyricModalCloseButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 30px;
+    color: black;
+    background-color: #fff;
+    padding: 0;
+  }
+}
+
+.newLyricModalContentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.newLyricModalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.newLyricModalFormItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  input {
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  textarea {
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .newLyricModalFormItemChordsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .newLyricModalFormItemChordsInput {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+
+      input {
+        flex: 1;
+      }
+
+      button {
+        font-size: 16px;
+      }
+    }
+
+    .newLyricModalFormItemChordsContainer {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+    }
+
+    .newLyricModalFormItemChordTag {
+      display: flex;
+      align-self: flex-start;
+      gap: 15px;
+      background-color: #f0ebfc;
+      border-radius: 20px;
+      padding: 10px 15px;
+      color: #6746d8;
+
+      & button {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+        color: #6746d8;
+      }
+    }
+  }
+}
+
+form .submitButton {
+  font-size: 16px;
+  font-weight: 600;
+  background: #6746d8;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+}

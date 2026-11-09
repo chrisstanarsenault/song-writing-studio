@@ -56,6 +56,9 @@
 
   .lyricsContainer {
     width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
     .lyricsItem {
       padding: 16px;
@@ -67,6 +70,15 @@
       &:nth-child(even) {
         background: #f0ebfc;
       }
+    }
+
+    .addAnotherSectionButton {
+      width: 100%;
+      background: #f0ebfc;
+      color: #6746d8;
+      border-radius: 8px;
+      border: none;
+      padding: 16px;
     }
   }
 }

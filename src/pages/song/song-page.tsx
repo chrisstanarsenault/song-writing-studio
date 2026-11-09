@@ -4,16 +4,18 @@ import { useLiveQuery } from 'dexie-react-hooks'
 
 import Header from '../../globals/components/header/header'
 import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-details-modal.tsx'
+import { NewLyricModal } from './components/new-lyric-modal/new-lyric-modal.tsx'
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
 
 import { songsTable, songStatusesTable, songTagsTable } from '../../lib/db.ts'
 
-import type { SongStatus, SongTag } from '../../globals/types/global-types.tsx'
+import type { SongStatus, SongTag, LyricsSection } from '../../globals/types/global-types.tsx'
 
 import styles from './song-page.module.css'
 
 const SongPage = () => {
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditingDetails, setIsEditingDetails] = useState(false)
+  const [isAddingNewLyric, setIsAddingNewLyric] = useState(false)
 
   const { songId } = useParams()
 
@@ -35,6 +37,20 @@ const SongPage = () => {
     return tags.map((tag: SongTag) => tag.name)
   }, [])
 
+  const handleSaveNewLyricsSection = async (formData: LyricsSection) => {
+    try {
+      const updatedCount = await songsTable.update(song?.id || '', {
+        sections: [...(song?.sections ?? []), formData]
+      })
+
+      if (updatedCount) {
+        setIsAddingNewLyric(false)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const details = useMemo(() => {
     return {
       title: song?.title || 'Untitled song',
@@ -53,7 +69,7 @@ const SongPage = () => {
         description={song?.status || 'Ideas'}
         editIcon={true}
         editIconOnClick={() => {
-          setIsEditing(!isEditing)
+          setIsEditingDetails(!isEditingDetails)
         }}
         buttons={[
           {
@@ -100,7 +116,13 @@ const SongPage = () => {
 
         <section className={styles.lyricsRecordingContainer}>
           <section className={styles.lyricsContainer}>
-            <LyricContainer />
+            {song?.sections?.map(section => (
+              <LyricContainer key={section.id} {...section} />
+            ))}
+
+            <button type="button" className={styles.addAnotherSectionButton} onClick={() => setIsAddingNewLyric(true)}>
+              Add another section
+            </button>
           </section>
 
           <section className={styles.recordingContainer}>
@@ -109,13 +131,23 @@ const SongPage = () => {
         </section>
       </section>
 
-      {isEditing && (
+      {isEditingDetails && (
         <EditSongDetailsModal
-          onClose={() => setIsEditing(false)}
+          onClose={() => setIsEditingDetails(false)}
           songId={song?.id || ''}
           details={details}
           tagsList={tags || []}
           statusList={statuses || []}
+        />
+      )}
+
+      {isAddingNewLyric && (
+        <NewLyricModal
+          onClose={() => setIsAddingNewLyric(false)}
+          onSave={formData => {
+            handleSaveNewLyricsSection(formData)
+          }}
+          sectionDetails={{}}
         />
       )}
     </div>
