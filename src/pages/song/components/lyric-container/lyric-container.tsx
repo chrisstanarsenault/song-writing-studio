@@ -15,11 +15,13 @@ interface LyricContainerProps {
   lyrics: string
   linkedRecording?: RecordingDetails | null
   linkedNotes?: NotesDetails | null
+  isSelected: boolean
   onMoveDown: () => void
   onMoveUp: () => void
   onEdit: () => void
   onDelete: () => void
   onRecordingNotes: () => void
+  onSelect: () => void
 }
 
 export const LyricContainer = ({
@@ -30,11 +32,12 @@ export const LyricContainer = ({
   lyrics = 'Lyrics lyrics lyrics lyrics',
   linkedRecording = null,
   linkedNotes = null,
+  isSelected,
+  onSelect,
   onMoveDown,
   onMoveUp,
   onEdit,
-  onDelete,
-  onRecordingNotes
+  onDelete
 }: LyricContainerProps) => {
   const handleMoveDown = () => {
     onMoveDown()
@@ -53,11 +56,11 @@ export const LyricContainer = ({
   }
 
   const handleRecordingNotes = () => {
-    onRecordingNotes()
+    onSelect()
   }
 
   return (
-    <section className={styles.lyricContainer}>
+    <section className={`${styles.lyricContainer} ${isSelected ? styles.selected : ''}`}>
       <div className={styles.lyricHeader}>
         <p>{title}</p>
 

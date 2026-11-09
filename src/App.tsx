@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router'
+import { ToastContainer } from 'react-toastify'
 
 import styles from './App.module.css'
 
@@ -11,6 +12,7 @@ function App() {
         <NavBar />
 
         <main className={styles.main}>
+          <ToastContainer position="top-center" />
           <Outlet />
         </main>
       </section>

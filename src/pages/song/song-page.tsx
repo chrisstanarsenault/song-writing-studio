@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { toast } from 'react-toastify'
 
 import Header from '../../globals/components/header/header'
 import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-details-modal.tsx'
-import { NewLyricModal } from './components/new-lyric-modal/new-lyric-modal.tsx'
+import { LyricSectionModal } from './components/lyric-section-modal/lyric-section-modal.tsx'
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
 
 import { songsTable, songStatusesTable, songTagsTable } from '../../lib/db.ts'
@@ -13,9 +14,12 @@ import type { SongStatus, SongTag, LyricsSection } from '../../globals/types/glo
 
 import styles from './song-page.module.css'
 
+type SectionModalState = { mode: 'create' } | { mode: 'edit'; sectionId: string } | null
+
 const SongPage = () => {
   const [isEditingDetails, setIsEditingDetails] = useState(false)
-  const [isAddingNewLyric, setIsAddingNewLyric] = useState(false)
+  const [lyricModalState, setLyricModalState] = useState<SectionModalState>(null)
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null)
 
   const { songId } = useParams()
 
@@ -41,14 +45,15 @@ const SongPage = () => {
       })
 
       if (updatedCount) {
-        setIsAddingNewLyric(false)
+        setLyricModalState(null)
       }
     } catch (error) {
       console.error(error)
+      toast.error('Failed to add new section')
     }
   }
 
-  const handleMoveDown = (id: string) => {
+  const handleMoveDown = async (id: string) => {
     const sectionIndex = song?.sections?.findIndex(section => section.id === id)
 
     if (
@@ -64,10 +69,15 @@ const SongPage = () => {
     newSections[sectionIndex] = newSections[sectionIndex + 1]
     newSections[sectionIndex + 1] = temp
 
-    songsTable.update(song?.id || '', { sections: newSections })
+    try {
+      await songsTable.update(song?.id || '', { sections: newSections })
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to move section up or down')
+    }
   }
 
-  const handleMoveUp = (id: string) => {
+  const handleMoveUp = async (id: string) => {
     const sectionIndex = song?.sections?.findIndex(section => section.id === id)
 
     if (sectionIndex === undefined || sectionIndex === null || (song?.sections?.length && sectionIndex === 0)) return
@@ -78,14 +88,40 @@ const SongPage = () => {
     newSections[sectionIndex] = newSections[sectionIndex - 1]
     newSections[sectionIndex - 1] = temp
 
-    songsTable.update(song?.id || '', { sections: newSections })
+    try {
+      await songsTable.update(song?.id || '', { sections: newSections })
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to move section up or down')
+    }
   }
+
+  const editingSection =
+    lyricModalState?.mode === 'edit'
+      ? song?.sections?.find(section => section.id === lyricModalState.sectionId)
+      : undefined
 
   const handleEdit = (id: string) => {
-    console.log('Edit', id)
+    setLyricModalState({ mode: 'edit', sectionId: id })
   }
 
-  const handleDelete = (id: string) => {
+  const handleSaveEditedSection = async (formData: LyricsSection) => {
+    try {
+      const sections = [...(song?.sections ?? [])]
+      const sectionIndex = sections.findIndex(section => section.id === formData.id)
+
+      if (sectionIndex === undefined || sectionIndex === null) return
+
+      sections[sectionIndex] = formData
+
+      await songsTable.update(song?.id || '', { sections: sections })
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to update section')
+    }
+  }
+
+  const handleDelete = async (id: string) => {
     const selectionIndex = song?.sections?.findIndex(section => section.id === id)
 
     if (selectionIndex === undefined || selectionIndex === null) return
@@ -93,7 +129,20 @@ const SongPage = () => {
     const newSections = [...(song?.sections ?? [])]
     newSections.splice(selectionIndex, 1)
 
-    songsTable.update(song?.id || '', { sections: newSections })
+    try {
+      await songsTable.update(song?.id || '', { sections: newSections })
+    } catch (error) {
+      console.error(error)
+      toast.error('Failed to delete section')
+    }
+  }
+
+  const handleSelectSection = (id: string) => {
+    if (selectedSectionId === id) {
+      setSelectedSectionId(null)
+    } else {
+      setSelectedSectionId(id)
+    }
   }
 
   const handleRecordingNotes = (id: string) => {
@@ -169,6 +218,8 @@ const SongPage = () => {
               <LyricContainer
                 key={section.id}
                 {...section}
+                isSelected={section.id === selectedSectionId}
+                onSelect={() => handleSelectSection(section.id)}
                 onMoveDown={() => handleMoveDown(section.id)}
                 onMoveUp={() => handleMoveUp(section.id)}
                 onEdit={() => handleEdit(section.id)}
@@ -177,7 +228,11 @@ const SongPage = () => {
               />
             ))}
 
-            <button type="button" className={styles.addAnotherSectionButton} onClick={() => setIsAddingNewLyric(true)}>
+            <button
+              type="button"
+              className={styles.addAnotherSectionButton}
+              onClick={() => setLyricModalState({ mode: 'create' })}
+            >
               Add another section
             </button>
           </section>
@@ -198,13 +253,14 @@ const SongPage = () => {
         />
       )}
 
-      {isAddingNewLyric && (
-        <NewLyricModal
-          onClose={() => setIsAddingNewLyric(false)}
-          onSave={formData => {
-            handleSaveNewLyricsSection(formData)
-          }}
-          sectionDetails={{}}
+      {lyricModalState && (
+        <LyricSectionModal
+          key={lyricModalState.mode === 'edit' ? lyricModalState.sectionId : 'new'}
+          onClose={() => setLyricModalState(null)}
+          onSave={formData =>
+            lyricModalState.mode === 'create' ? handleSaveNewLyricsSection(formData) : handleSaveEditedSection(formData)
+          }
+          sectionDetails={editingSection ?? {}}
         />
       )}
     </div>

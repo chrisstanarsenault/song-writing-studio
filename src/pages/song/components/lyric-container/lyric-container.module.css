@@ -6,6 +6,10 @@
   background: #fff;
   border-radius: 8px;
   padding: 20px;
+
+  &.selected {
+    background: #f0ebfc;
+  }
 }
 
 .lyricHeader {

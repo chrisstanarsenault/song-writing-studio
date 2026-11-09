@@ -1,22 +1,25 @@
 import { useState } from 'react'
 
 import { IoClose } from 'react-icons/io5'
-import { Modal } from '../../../../globals/components/modal-portal/modal-portal'
+import { Modal } from '../../../../globals/components/modal-portal/modal-portal.tsx'
 
 import type { LyricsSection } from '../../../../globals/types/global-types.tsx'
 
-import styles from './new-lyric-modal.module.css'
+import styles from './lyric-section-modal.module.css'
 
-type NewLyricFormData = Pick<LyricsSection, 'title' | 'chords' | 'lyrics' | 'id' | 'createdAt' | 'updatedAt'>
+type LyricsSectionFormData = Pick<LyricsSection, 'title' | 'chords' | 'lyrics' | 'id' | 'createdAt' | 'updatedAt'>
 
-interface NewLyricsModalProps {
+type LyricSectionModalMode = 'create' | 'edit'
+
+interface LyricsSectionModalProps {
   onClose: () => void
-  onSave: (formData: NewLyricFormData) => void
-  sectionDetails: Partial<NewLyricFormData>
+  onSave: (formData: LyricsSectionFormData) => void
+  sectionDetails: Partial<LyricsSectionFormData>
+  mode: LyricSectionModalMode
 }
 
-export const NewLyricModal = ({ onClose, onSave, sectionDetails }: NewLyricsModalProps) => {
-  const [formData, setFormData] = useState<NewLyricFormData>(() => ({
+export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: LyricsSectionModalProps) => {
+  const [formData, setFormData] = useState<LyricsSectionFormData>(() => ({
     id: sectionDetails.id ?? crypto.randomUUID(),
     title: sectionDetails.title ?? '',
     chords: sectionDetails.chords ?? [],
@@ -64,7 +67,7 @@ export const NewLyricModal = ({ onClose, onSave, sectionDetails }: NewLyricsModa
           </button>
 
           <div className={styles.newLyricModalContentContainer}>
-            <h3>New Section</h3>
+            <h3>{mode === 'create' ? 'New Section' : 'Edit Section'}</h3>
 
             <form className={styles.newLyricModalForm} onSubmit={handleSubmit}>
               <div className={styles.newLyricModalFormItem}>
@@ -120,7 +123,7 @@ export const NewLyricModal = ({ onClose, onSave, sectionDetails }: NewLyricsModa
               </div>
 
               <button type="submit" className={styles.submitButton}>
-                Add section
+                {mode === 'create' ? 'Add section' : 'Update section'}
               </button>
             </form>
           </div>
