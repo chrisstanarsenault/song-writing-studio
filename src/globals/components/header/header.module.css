@@ -47,12 +47,12 @@ button {
   font-weight: 500;
 }
 
-button:first-of-type {
+.primary {
   background-color: #6746d8;
   color: #fff;
 }
 
-button:last-of-type {
+.secondary {
   background-color: #f0ebfc;
   color: #6746d8;
 }

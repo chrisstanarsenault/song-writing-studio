@@ -12,7 +12,7 @@ interface HeaderProps {
 
 interface ButtonProps {
   title: string
-  type: 'primary' | 'secondary'
+  variant: 'primary' | 'secondary'
   onClick?: () => void
 }
 
@@ -35,7 +35,11 @@ const Header = ({ title, description, buttons, editIcon = false, editIconOnClick
       {buttons && buttons.length > 0 && (
         <div className={styles.buttons_container}>
           {buttons.map((button: ButtonProps) => (
-            <button key={button.title} onClick={button.onClick}>
+            <button
+              key={button.title}
+              className={`${styles.button} ${styles[button.variant]}`}
+              onClick={button.onClick}
+            >
               {button.title}
             </button>
           ))}

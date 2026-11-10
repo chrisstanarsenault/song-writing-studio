@@ -77,8 +77,8 @@ const LibraryPage = () => {
         title="Song Library"
         description="Your songs, words and melodies, together."
         buttons={[
-          { title: '+ New song', type: 'primary', onClick: newSongClick },
-          { title: 'Capture idea', type: 'secondary', onClick: captureIdeaClick }
+          { title: '+ New song', variant: 'primary', onClick: newSongClick },
+          { title: 'Capture idea', variant: 'secondary', onClick: captureIdeaClick }
         ]}
       />
 

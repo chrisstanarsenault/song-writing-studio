@@ -165,7 +165,7 @@ const SongPage = () => {
         buttons={[
           {
             title: 'Record idea',
-            type: 'primary',
+            variant: 'primary',
             onClick: () => {
               console.log('Record idea')
             }
