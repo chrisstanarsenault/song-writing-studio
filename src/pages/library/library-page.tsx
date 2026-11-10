@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router'
 
-import { songsTable, songTagsTable, songStatusesTable } from '../../lib/db.ts'
+import { songsTable, songTagsTable, songStatusesTable } from '#lib/db.ts'
 
-import type { Song, SongTag, SongStatus } from '../../globals/types/global-types.tsx'
+import type { Song, SongTag, SongStatus } from '#globals/types/global-types.tsx'
 
-import Header from '../../globals/components/header/header.tsx'
+import Header from '#globals/components/header/header.tsx'
+import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
 
 import styles from './library-page.module.css'
 
@@ -157,8 +158,12 @@ const LibraryPage = () => {
             <h4>Your library, safe</h4>
             <p>Keep a complete copy of your lyrics, notes and audio.</p>
 
-            <button>Export backup</button>
-            <button>Import backup</button>
+            <GlobalButton variant="primary" onClick={() => {}}>
+              Export backup
+            </GlobalButton>
+            <GlobalButton variant="secondary" onClick={() => {}}>
+              Import backup
+            </GlobalButton>
           </section>
         </section>
       </section>

@@ -4,15 +4,16 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { toast } from 'react-toastify'
 
 import Header from '#globals/components/header/header'
+import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
 import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-details-modal.tsx'
 import { LyricSectionModal } from './components/lyric-section-modal/lyric-section-modal.tsx'
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
 
-import { songsTable, songStatusesTable, songTagsTable } from '../../lib/db.ts'
-import { addSection } from '../../lib/add-lyric-section.ts'
-import { updateSection } from '../../lib/edit-lyric-section.ts'
+import { songsTable, songStatusesTable, songTagsTable } from '#lib/db.ts'
+import { addSection } from '#lib/add-lyric-section.ts'
+import { updateSection } from '#lib/edit-lyric-section.ts'
 
-import type { SongStatus, SongTag, LyricsSection } from '../../globals/types/global-types.tsx'
+import type { SongStatus, SongTag, LyricsSection } from '#globals/types/global-types.tsx'
 
 import styles from './song-page.module.css'
 
@@ -221,13 +222,9 @@ const SongPage = () => {
               />
             ))}
 
-            <button
-              type="button"
-              className={styles.addAnotherSectionButton}
-              onClick={() => setLyricModalState({ mode: 'create' })}
-            >
+            <GlobalButton variant="secondary" onClick={() => setLyricModalState({ mode: 'create' })}>
               Add another section
-            </button>
+            </GlobalButton>
           </section>
 
           <section className={styles.recordingContainer}>

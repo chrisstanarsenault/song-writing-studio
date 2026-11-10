@@ -37,22 +37,3 @@
   gap: 10px;
   width: 200px;
 }
-
-button {
-  font-size: 18px;
-  padding: 16px;
-  border-radius: 8px;
-  border: none;
-  text-align: left;
-  font-weight: 500;
-}
-
-.primary {
-  background-color: #6746d8;
-  color: #fff;
-}
-
-.secondary {
-  background-color: #f0ebfc;
-  color: #6746d8;
-}

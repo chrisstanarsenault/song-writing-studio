@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
 import { IoClose } from 'react-icons/io5'
-import { Modal } from '../../../../globals/components/modal-portal/modal-portal.tsx'
+import { Modal } from '#globals/components/modal-portal/modal-portal.tsx'
 
-import type { LyricsSection } from '../../../../globals/types/global-types.tsx'
+import type { LyricsSection } from '#globals/types/global-types.tsx'
 
 import styles from './lyric-section-modal.module.css'
 

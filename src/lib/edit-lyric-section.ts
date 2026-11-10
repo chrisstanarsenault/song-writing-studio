@@ -1,5 +1,5 @@
 import { songLibraryDb, songsTable } from './db'
-import type { LyricsSection } from '../globals/types/global-types'
+import type { LyricsSection } from '#globals/types/global-types'
 
 export async function updateSection (
   songId: string,

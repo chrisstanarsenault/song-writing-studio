@@ -1,5 +1,7 @@
 import { MdEdit } from 'react-icons/md'
 
+import { GlobalButton } from '#globals/components/global-button/global-button'
+
 import styles from './header.module.css'
 
 interface HeaderProps {
@@ -13,7 +15,7 @@ interface HeaderProps {
 interface ButtonProps {
   title: string
   variant: 'primary' | 'secondary'
-  onClick?: () => void
+  onClick: () => void
 }
 
 const Header = ({ title, description, buttons, editIcon = false, editIconOnClick }: HeaderProps) => {
@@ -35,13 +37,9 @@ const Header = ({ title, description, buttons, editIcon = false, editIconOnClick
       {buttons && buttons.length > 0 && (
         <div className={styles.buttons_container}>
           {buttons.map((button: ButtonProps) => (
-            <button
-              key={button.title}
-              className={`${styles.button} ${styles[button.variant]}`}
-              onClick={button.onClick}
-            >
+            <GlobalButton key={button.title} variant={button.variant} onClick={button.onClick}>
               {button.title}
-            </button>
+            </GlobalButton>
           ))}
         </div>
       )}
