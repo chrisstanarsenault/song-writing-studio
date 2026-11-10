@@ -80,7 +80,7 @@ const SongPage = () => {
   const handleMoveUp = async (id: string) => {
     const sectionIndex = song?.sections?.findIndex(section => section.id === id)
 
-    if (sectionIndex === undefined || sectionIndex === null || (song?.sections?.length && sectionIndex === 0)) return
+    if (sectionIndex === undefined || sectionIndex <= 0) return
 
     const newSections = [...(song?.sections ?? [])]
     const temp = newSections[sectionIndex]
@@ -110,7 +110,7 @@ const SongPage = () => {
       const sections = [...(song?.sections ?? [])]
       const sectionIndex = sections.findIndex(section => section.id === formData.id)
 
-      if (sectionIndex === undefined || sectionIndex === null) return
+      if (sectionIndex === undefined || sectionIndex === -1) return
 
       sections[sectionIndex] = formData
 
@@ -124,7 +124,7 @@ const SongPage = () => {
   const handleDelete = async (id: string) => {
     const selectionIndex = song?.sections?.findIndex(section => section.id === id)
 
-    if (selectionIndex === undefined || selectionIndex === null) return
+    if (selectionIndex === undefined || selectionIndex === -1) return
 
     const newSections = [...(song?.sections ?? [])]
     newSections.splice(selectionIndex, 1)
