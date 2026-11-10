@@ -140,7 +140,7 @@ const LibraryPage = () => {
                   return (
                     <tr key={song.id}>
                       <td>
-                        <NavLink to={`/song/${song.title}`}>{song.title}</NavLink>
+                        <NavLink to={`/song/${song.id}`}>{song.title || 'Untitled song'}</NavLink>
                       </td>
                       <td>{song.status}</td>
                       <td>{song.tags?.join(', ') || 'No tags'}</td>
