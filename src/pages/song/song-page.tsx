@@ -9,6 +9,8 @@ import { LyricSectionModal } from './components/lyric-section-modal/lyric-sectio
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
 
 import { songsTable, songStatusesTable, songTagsTable } from '../../lib/db.ts'
+import { addSection } from '../../lib/add-lyric-section.ts'
+import { updateSection } from '../../lib/edit-lyric-section.ts'
 
 import type { SongStatus, SongTag, LyricsSection } from '../../globals/types/global-types.tsx'
 
@@ -40,13 +42,9 @@ const SongPage = () => {
 
   const handleSaveNewLyricsSection = async (formData: LyricsSection) => {
     try {
-      const updatedCount = await songsTable.update(song?.id || '', {
-        sections: [...(song?.sections ?? []), formData]
-      })
+      await addSection(song?.id || '', formData)
 
-      if (updatedCount) {
-        setLyricModalState(null)
-      }
+      setLyricModalState(null)
     } catch (error) {
       console.error(error)
       toast.error('Failed to add new section')
@@ -67,8 +65,8 @@ const SongPage = () => {
     try {
       await songsTable.update(song?.id || '', { sections: newSections })
     } catch (error) {
-      console.error(error)
       toast.error('Failed to move section up or down')
+      throw error
     }
   }
 
@@ -86,8 +84,8 @@ const SongPage = () => {
     try {
       await songsTable.update(song?.id || '', { sections: newSections })
     } catch (error) {
-      console.error(error)
       toast.error('Failed to move section up or down')
+      throw error
     }
   }
 
@@ -109,10 +107,10 @@ const SongPage = () => {
 
       sections[sectionIndex] = formData
 
-      await songsTable.update(song?.id || '', { sections: sections })
+      await updateSection(song?.id || '', formData)
     } catch (error) {
-      console.error(error)
       toast.error('Failed to update section')
+      throw error
     }
   }
 
@@ -127,8 +125,8 @@ const SongPage = () => {
     try {
       await songsTable.update(song?.id || '', { sections: newSections })
     } catch (error) {
-      console.error(error)
       toast.error('Failed to delete section')
+      throw error
     }
   }
 
@@ -252,10 +250,13 @@ const SongPage = () => {
         <LyricSectionModal
           key={lyricModalState.mode === 'edit' ? lyricModalState.sectionId : 'new'}
           onClose={() => setLyricModalState(null)}
-          onSave={formData =>
-            lyricModalState.mode === 'create' ? handleSaveNewLyricsSection(formData) : handleSaveEditedSection(formData)
+          onSave={async (formData: LyricsSection) =>
+            lyricModalState.mode === 'create'
+              ? await handleSaveNewLyricsSection(formData as LyricsSection)
+              : await handleSaveEditedSection(formData as LyricsSection)
           }
           sectionDetails={editingSection ?? {}}
+          mode={lyricModalState.mode}
         />
       )}
     </div>
