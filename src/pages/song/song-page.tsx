@@ -56,12 +56,7 @@ const SongPage = () => {
   const handleMoveDown = async (id: string) => {
     const sectionIndex = song?.sections?.findIndex(section => section.id === id)
 
-    if (
-      sectionIndex === undefined ||
-      sectionIndex === null ||
-      (song?.sections?.length && sectionIndex === song?.sections?.length - 1)
-    )
-      return
+    if (sectionIndex === undefined || sectionIndex === -1 || sectionIndex === (song?.sections?.length ?? 0) - 1) return
 
     const newSections = [...(song?.sections ?? [])]
     const temp = newSections[sectionIndex]

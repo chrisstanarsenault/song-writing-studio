@@ -13,7 +13,7 @@ type LyricSectionModalMode = 'create' | 'edit'
 
 interface LyricsSectionModalProps {
   onClose: () => void
-  onSave: (formData: LyricsSectionFormData) => void
+  onSave: (formData: LyricsSectionFormData) => Promise<void>
   sectionDetails: Partial<LyricsSectionFormData>
   mode: LyricSectionModalMode
 }
@@ -47,14 +47,15 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
     }))
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     try {
-      onSave(formData)
+      await onSave(formData)
       onClose()
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 
