@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
 import { IoClose } from 'react-icons/io5'
-import { Modal } from '../../../../globals/components/modal-portal/modal-portal'
+import { Modal } from '#globals/components/modal-portal/modal-portal'
 
-import type { Song } from '../../../../globals/types/global-types'
-import { songsTable } from '../../../../lib/db.ts'
+import type { Song } from '#globals/types/global-types'
+import { songsTable } from '#lib/db.ts'
 
 import styles from './edit-song-details-modal.module.css'
 
@@ -51,6 +51,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
       }
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 
