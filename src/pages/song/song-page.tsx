@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { toast } from 'react-toastify'
 
-import Header from '../../globals/components/header/header'
+import Header from '#globals/components/header/header'
 import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-details-modal.tsx'
 import { LyricSectionModal } from './components/lyric-section-modal/lyric-section-modal.tsx'
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
