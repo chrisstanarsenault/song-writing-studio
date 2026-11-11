@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router'
+import { useLiveQuery } from 'dexie-react-hooks'
 
 import { songsTable, songTagsTable, songStatusesTable } from '#lib/db.ts'
 
@@ -13,28 +13,18 @@ import styles from './library-page.module.css'
 const LibraryPage = () => {
   const navigate = useNavigate()
 
-  const [songs, setSongs] = useState<Song[]>([])
-  const [tags, setTags] = useState<SongTag[]>([])
-  const [statuses, setStatuses] = useState<SongStatus[]>([])
+  const songs = useLiveQuery(async () => {
+    return await songsTable.toArray()
+  }, [])
 
-  useEffect(() => {
-    const querySongs = async () => {
-      const songs = await songsTable.toArray()
-      setSongs(songs)
-    }
-    querySongs()
+  const tags = useLiveQuery(async () => {
+    const tagList = await songTagsTable.toArray()
+    return tagList.map((tag: SongTag) => tag)
+  }, [])
 
-    const queryTags = async () => {
-      const tags = await songTagsTable.toArray()
-      setTags(tags)
-    }
-    queryTags()
-
-    const queryStatuses = async () => {
-      const statuses = await songStatusesTable.toArray()
-      setStatuses(statuses)
-    }
-    queryStatuses()
+  const statuses = useLiveQuery(async () => {
+    const statusList = await songStatusesTable.toArray()
+    return statusList.map((status: SongStatus) => status)
   }, [])
 
   const newSongClick = () => {
@@ -70,6 +60,14 @@ const LibraryPage = () => {
     } catch (error) {
       console.error('Error adding song:', error)
     }
+  }
+
+  if (!songs || !statuses || !tags) {
+    return (
+      <div>
+        <div>Loading your library...</div>
+      </div>
+    )
   }
 
   return (
@@ -136,10 +134,10 @@ const LibraryPage = () => {
                 </tr>
               </thead>
 
-              <tbody>
+              <tbody className={styles.content_table_body}>
                 {songs.map(song => {
                   return (
-                    <tr key={song.id}>
+                    <tr key={song.id} className={styles.content_table_row}>
                       <td>
                         <NavLink to={`/song/${song.id}`}>{song.title || 'Untitled song'}</NavLink>
                       </td>

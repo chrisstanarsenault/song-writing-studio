@@ -1,7 +1,9 @@
 import { useState } from 'react'
 
 import { IoClose } from 'react-icons/io5'
+
 import { Modal } from '#globals/components/modal-portal/modal-portal.tsx'
+import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
 
 import type { LyricsSection } from '#globals/types/global-types.tsx'
 
@@ -94,9 +96,9 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
                       value={selectedChord}
                       onChange={event => setSelectedChord(event.target.value)}
                     />
-                    <button type="button" onClick={() => handleAddChord(selectedChord)}>
+                    <GlobalButton type="button" variant="primary" onClick={() => handleAddChord(selectedChord)}>
                       Add chord
-                    </button>
+                    </GlobalButton>
                   </div>
 
                   <div className={styles.newLyricModalFormItemChordsContainer}>
@@ -123,9 +125,9 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
                 />
               </div>
 
-              <button type="submit" className={styles.submitButton}>
+              <GlobalButton type="submit" variant="primary" onClick={() => handleSubmit}>
                 {mode === 'create' ? 'Add section' : 'Update section'}
-              </button>
+              </GlobalButton>
             </form>
           </div>
         </div>

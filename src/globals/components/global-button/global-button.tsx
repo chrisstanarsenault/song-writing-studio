@@ -8,6 +8,7 @@ interface GlobalButtonProps {
   disabled?: boolean
   fullWidth?: boolean
   type?: 'button' | 'submit' | 'reset'
+  textAlign?: 'left' | 'center' | 'right'
   onClick: () => void
 }
 
@@ -17,11 +18,12 @@ export const GlobalButton = ({
   disabled,
   fullWidth,
   type = 'button',
+  textAlign = 'center',
   onClick
 }: GlobalButtonProps) => {
   return (
     <button
-      className={`${styles.globalButton} ${styles[variant]} ${fullWidth ? styles.fullWidth : ''}`}
+      className={`${styles.globalButton} ${styles[variant]} ${fullWidth ? styles.fullWidth : ''} ${styles[textAlign]}`}
       disabled={disabled}
       onClick={onClick}
       type={type}
