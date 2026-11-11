@@ -92,6 +92,16 @@
   overflow: auto;
 }
 
+.no_songs_container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
 .backup_container {
   display: flex;
   flex-direction: column;

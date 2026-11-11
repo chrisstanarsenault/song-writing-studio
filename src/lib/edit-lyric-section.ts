@@ -1,11 +1,11 @@
-import { songLibraryDb, songsTable } from './db'
+import { db, songsTable } from './db'
 import type { LyricsSection } from '#globals/types/global-types'
 
 export async function updateSection (
   songId: string,
   editedSection: LyricsSection
 ): Promise<void> {
-  await songLibraryDb.transaction('rw', songsTable, async () => {
+  await db.transaction('rw', songsTable, async () => {
     const song = await songsTable.get(songId)
 
     if (!song) {
