@@ -114,7 +114,7 @@
 
 .content table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   text-align: left;
   padding: 16px;
 }
@@ -124,6 +124,10 @@
   font-weight: 500;
   color: #596579;
   padding-bottom: 16px;
+}
+
+.content table tbody tr:not(:last-child) td {
+  padding-bottom: 24px;
 }
 
 .content table td {

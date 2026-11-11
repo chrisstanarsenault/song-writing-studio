@@ -1,7 +1,9 @@
 import { useState } from 'react'
 
 import { IoClose } from 'react-icons/io5'
+
 import { Modal } from '#globals/components/modal-portal/modal-portal'
+import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
 
 import type { Song } from '#globals/types/global-types'
 import { songsTable } from '#lib/db.ts'
@@ -162,9 +164,9 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                     </select>
                   </div>
 
-                  <button type="submit" className={styles.submitButton} onClick={() => handleSubmit}>
+                  <GlobalButton type="submit" variant="primary" onClick={() => handleSubmit}>
                     Update Song
-                  </button>
+                  </GlobalButton>
                 </form>
               </div>
             </div>
