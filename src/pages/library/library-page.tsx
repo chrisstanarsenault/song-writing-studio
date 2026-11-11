@@ -24,6 +24,7 @@ const LibraryPage = () => {
 
   const statuses = useLiveQuery(async () => {
     const statusList = await songStatusesTable.toArray()
+    console.log('Statuses', statuses)
     return statusList.map((status: SongStatus) => status)
   }, [])
 
@@ -103,7 +104,6 @@ const LibraryPage = () => {
             ))}
           </select>
         </section>
-
         <section className={styles.stats_container}>
           <div className={styles.stats_item}>
             <h4>Total songs</h4>
@@ -123,33 +123,43 @@ const LibraryPage = () => {
 
         <section className={styles.content_container}>
           <section className={styles.content}>
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Title</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Tags</th>
-                  <th scope="col">Last Edited</th>
-                  <th scope="col">Takes</th>
-                </tr>
-              </thead>
+            {!songs.length ? (
+              <section className={styles.no_songs_container}>
+                <h4>No songs found</h4>
+                <p>Create a new song to get started.</p>
+                <GlobalButton variant="primary" onClick={newSongClick}>
+                  Create new song
+                </GlobalButton>
+              </section>
+            ) : (
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Tags</th>
+                    <th scope="col">Last Edited</th>
+                    <th scope="col">Takes</th>
+                  </tr>
+                </thead>
 
-              <tbody className={styles.content_table_body}>
-                {songs.map(song => {
-                  return (
-                    <tr key={song.id} className={styles.content_table_row}>
-                      <td>
-                        <NavLink to={`/song/${song.id}`}>{song.title || 'Untitled song'}</NavLink>
-                      </td>
-                      <td>{song.status}</td>
-                      <td>{song.tags?.join(', ') || 'No tags'}</td>
-                      <td>{new Date(song.lastEdited).toLocaleDateString()}</td>
-                      <td>{song.takes}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                <tbody className={styles.content_table_body}>
+                  {songs.map(song => {
+                    return (
+                      <tr key={song.id} className={styles.content_table_row}>
+                        <td>
+                          <NavLink to={`/song/${song.id}`}>{song.title || 'Untitled song'}</NavLink>
+                        </td>
+                        <td>{song.status}</td>
+                        <td>{song.tags?.join(', ') || 'No tags'}</td>
+                        <td>{new Date(song.lastEdited).toLocaleDateString()}</td>
+                        <td>{song.takes}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            )}
           </section>
 
           <section className={styles.backup_container}>
