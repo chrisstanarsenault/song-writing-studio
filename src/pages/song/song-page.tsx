@@ -10,10 +10,9 @@ import { LyricSectionModal } from './components/lyric-section-modal/lyric-sectio
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
 
 import { songsTable, songStatusesTable, songTagsTable } from '#lib/db.ts'
-import { addSection } from '#lib/add-lyric-section.ts'
-import { updateSection } from '#lib/edit-lyric-section.ts'
+import { moveSectionUp, moveSectionDown, deleteSection, addSection, updateSection } from '#features/songs/song-data.ts'
 
-import type { SongStatus, SongTag, LyricsSection } from '#globals/types/global-types.tsx'
+import type { SongStatus, SongTag, LyricsSectionFormData } from '#globals/types/global-types.tsx'
 
 import styles from './song-page.module.css'
 
@@ -41,7 +40,7 @@ const SongPage = () => {
     return tags.map((tag: SongTag) => tag.name)
   }, [])
 
-  const handleSaveNewLyricsSection = async (formData: LyricsSection) => {
+  const handleSaveNewLyricsSection = async (formData: LyricsSectionFormData) => {
     try {
       await addSection(song?.id || '', formData)
 
@@ -52,38 +51,18 @@ const SongPage = () => {
     }
   }
 
-  const handleMoveDown = async (id: string) => {
-    const sectionIndex = song?.sections?.findIndex(section => section.id === id)
-
-    if (sectionIndex === undefined || sectionIndex === -1 || sectionIndex === (song?.sections?.length ?? 0) - 1) return
-
-    const newSections = [...(song?.sections ?? [])]
-    const temp = newSections[sectionIndex]
-
-    newSections[sectionIndex] = newSections[sectionIndex + 1]
-    newSections[sectionIndex + 1] = temp
-
+  const handleMoveDown = async (sectionId: string) => {
     try {
-      await songsTable.update(song?.id || '', { sections: newSections })
+      await moveSectionDown(song?.id || '', sectionId)
     } catch (error) {
       toast.error('Failed to move section up or down')
       throw error
     }
   }
 
-  const handleMoveUp = async (id: string) => {
-    const sectionIndex = song?.sections?.findIndex(section => section.id === id)
-
-    if (sectionIndex === undefined || sectionIndex <= 0) return
-
-    const newSections = [...(song?.sections ?? [])]
-    const temp = newSections[sectionIndex]
-
-    newSections[sectionIndex] = newSections[sectionIndex - 1]
-    newSections[sectionIndex - 1] = temp
-
+  const handleMoveUp = async (sectionId: string) => {
     try {
-      await songsTable.update(song?.id || '', { sections: newSections })
+      await moveSectionUp(song?.id || '', sectionId)
     } catch (error) {
       toast.error('Failed to move section up or down')
       throw error
@@ -99,15 +78,8 @@ const SongPage = () => {
     setLyricModalState({ mode: 'edit', sectionId: id })
   }
 
-  const handleSaveEditedSection = async (formData: LyricsSection) => {
+  const handleSaveEditedSection = async (formData: LyricsSectionFormData) => {
     try {
-      const sections = [...(song?.sections ?? [])]
-      const sectionIndex = sections.findIndex(section => section.id === formData.id)
-
-      if (sectionIndex === undefined || sectionIndex === -1) return
-
-      sections[sectionIndex] = formData
-
       await updateSection(song?.id || '', formData)
     } catch (error) {
       toast.error('Failed to update section')
@@ -115,16 +87,9 @@ const SongPage = () => {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    const selectionIndex = song?.sections?.findIndex(section => section.id === id)
-
-    if (selectionIndex === undefined || selectionIndex === -1) return
-
-    const newSections = [...(song?.sections ?? [])]
-    newSections.splice(selectionIndex, 1)
-
+  const handleDelete = async (sectionId: string) => {
     try {
-      await songsTable.update(song?.id || '', { sections: newSections })
+      await deleteSection(song?.id || '', sectionId)
     } catch (error) {
       toast.error('Failed to delete section')
       throw error
@@ -222,7 +187,7 @@ const SongPage = () => {
               />
             ))}
 
-            <GlobalButton variant="secondary" onClick={() => setLyricModalState({ mode: 'create' })}>
+            <GlobalButton variant="primary" onClick={() => setLyricModalState({ mode: 'create' })}>
               Add another section
             </GlobalButton>
           </section>
@@ -247,10 +212,10 @@ const SongPage = () => {
         <LyricSectionModal
           key={lyricModalState.mode === 'edit' ? lyricModalState.sectionId : 'new'}
           onClose={() => setLyricModalState(null)}
-          onSave={async (formData: LyricsSection) =>
+          onSave={async (formData: LyricsSectionFormData) =>
             lyricModalState.mode === 'create'
-              ? await handleSaveNewLyricsSection(formData as LyricsSection)
-              : await handleSaveEditedSection(formData as LyricsSection)
+              ? await handleSaveNewLyricsSection(formData as LyricsSectionFormData)
+              : await handleSaveEditedSection(formData as LyricsSectionFormData)
           }
           sectionDetails={editingSection ?? {}}
           mode={lyricModalState.mode}

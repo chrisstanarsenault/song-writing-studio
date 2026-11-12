@@ -4,8 +4,10 @@ export interface LyricsSection {
   lyrics: string
   chords: string[]
   createdAt: string
-  updatedAt: string
+  lastEdited: string
 }
+
+export type LyricsSectionFormData = Pick<LyricsSection, 'title' | 'chords' | 'lyrics' | 'id'>
 
 export interface Song {
   id: string

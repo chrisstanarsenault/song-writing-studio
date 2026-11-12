@@ -134,7 +134,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                       </button>
                     </div>
 
-                    <div>
+                    <div className={styles.tagListContainer}>
                       {formData.tags?.map(tag => {
                         return (
                           <div key={tag} className={styles.selectedTagItem}>

@@ -9,7 +9,7 @@ import type { LyricsSection } from '#globals/types/global-types.tsx'
 
 import styles from './lyric-section-modal.module.css'
 
-type LyricsSectionFormData = Pick<LyricsSection, 'title' | 'chords' | 'lyrics' | 'id' | 'createdAt' | 'updatedAt'>
+type LyricsSectionFormData = Pick<LyricsSection, 'title' | 'chords' | 'lyrics' | 'id'>
 
 type LyricSectionModalMode = 'create' | 'edit'
 
@@ -25,9 +25,7 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
     id: sectionDetails.id ?? crypto.randomUUID(),
     title: sectionDetails.title ?? '',
     chords: sectionDetails.chords ?? [],
-    lyrics: sectionDetails.lyrics ?? '',
-    createdAt: sectionDetails.createdAt ?? new Date().toISOString(),
-    updatedAt: sectionDetails.updatedAt ?? new Date().toISOString()
+    lyrics: sectionDetails.lyrics ?? ''
   }))
   const [selectedChord, setSelectedChord] = useState<string>('')
 

@@ -16,7 +16,7 @@ test('Shows title, description and buttons', async () => {
     <Header
       title="Test Title"
       description="Test Description"
-      buttons={[{ title: 'Login', type: 'primary', onClick: () => {} }]}
+      buttons={[{ title: 'Login', variant: 'primary', onClick: () => {} }]}
     />
   )
 
@@ -42,7 +42,9 @@ test("Doesn't show buttons or description if not provided", async () => {
 test('Calls onClick when button is clicked', async () => {
   const onClick = vi.fn()
 
-  const screen = render(<Header title="Test Title" buttons={[{ title: 'Login', type: 'primary', onClick: onClick }]} />)
+  const screen = render(
+    <Header title="Test Title" buttons={[{ title: 'Login', variant: 'primary', onClick: onClick }]} />
+  )
 
   await userEvent.click(screen.getByRole('button', { name: 'Login' }))
   expect(onClick).toHaveBeenCalled()
