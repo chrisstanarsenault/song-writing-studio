@@ -9,7 +9,7 @@ interface GlobalButtonProps {
   fullWidth?: boolean
   type?: 'button' | 'submit' | 'reset'
   textAlign?: 'left' | 'center' | 'right'
-  onClick: () => void
+  onClick?: () => void
 }
 
 export const GlobalButton = ({

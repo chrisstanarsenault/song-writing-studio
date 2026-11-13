@@ -61,24 +61,29 @@ export const LyricContainer = ({
         <p>{title}</p>
 
         <div className={styles.lyricHeaderActions}>
-          <button type="button" onClick={() => handleMoveDown()}>
-            <FaArrowDown />
+          <button type="button" aria-label={`Move ${title || 'section'} down`} onClick={() => handleMoveDown()}>
+            <FaArrowDown aria-hidden="true" />
           </button>
 
-          <button type="button" onClick={() => handleMoveUp()}>
-            <FaArrowUp />
+          <button type="button" aria-label={`Move ${title || 'section'} up`} onClick={() => handleMoveUp()}>
+            <FaArrowUp aria-hidden="true" />
           </button>
 
-          <button type="button" onClick={() => handleEdit()}>
-            <MdEdit />
+          <button type="button" aria-label={`Edit ${title || 'section'}`} onClick={() => handleEdit()}>
+            <MdEdit aria-hidden="true" />
           </button>
 
-          <button type="button" onClick={() => handleDelete()}>
-            <IoTrashOutline />
+          <button type="button" aria-label={`Delete ${title || 'section'}`} onClick={() => handleDelete()}>
+            <IoTrashOutline aria-hidden="true" />
           </button>
 
-          <button type="button" onClick={() => handleRecordingNotes()}>
-            <IoIosMore />
+          <button
+            type="button"
+            aria-label={`View recording and notes for ${title || 'section'}`}
+            aria-pressed={isSelected}
+            onClick={() => handleRecordingNotes()}
+          >
+            <IoIosMore aria-hidden="true" />
           </button>
         </div>
       </div>

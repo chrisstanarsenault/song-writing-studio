@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 
 import { IoClose } from 'react-icons/io5'
 
@@ -23,6 +23,10 @@ interface EditSongDetailsModalProps {
 export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, songId }: EditSongDetailsModalProps) => {
   const [formData, setFormData] = useState<Details>(details)
   const [selectedTag, setSelectedTag] = useState<string>('')
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+
+  const titleId = useId()
 
   const handleAddTag = (tag: string) => {
     if (!tag) return
@@ -42,8 +46,11 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
     }))
   }
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    setIsSaving(true)
+    setSaveError(null)
 
     try {
       const updatedCount = await songsTable.update(songId, { ...formData })
@@ -51,28 +58,32 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
       if (updatedCount) {
         onClose()
       }
-    } catch (error) {
-      console.error(error)
-      throw error
+    } catch {
+      setSaveError('Couldnt save song details. Please try again.')
+    } finally {
+      setIsSaving(false)
     }
   }
 
   return (
-    <Modal>
+    <Modal titleId={titleId} onClose={onClose}>
       <section className={styles.modalOuterContainer}>
         <div className={styles.modalInnerContainer}>
-          <button type="button" onClick={onClose} className={styles.modalCloseButton}>
-            <IoClose />
+          <button type="button" aria-label="Close song details" onClick={onClose} className={styles.modalCloseButton}>
+            <IoClose aria-hidden="true" />
           </button>
 
           <div className={styles.modalContentContainer}>
-            <h3>Edit Details</h3>
+            <h3 id={titleId}>Edit Details</h3>
+
             <div className={styles.modalContent}>
               <div className={styles.modalContentItem}>
                 <form onSubmit={handleSubmit} className={styles.modalContentForm}>
                   <div className={styles.modalContentItem}>
                     <label htmlFor="title">Title</label>
                     <input
+                      autoFocus
+                      data-initial-focus
                       type="text"
                       id="title"
                       placeholder="What is the title of the song..."
@@ -129,13 +140,14 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                         ))}
                       </select>
 
-                      <button
+                      <GlobalButton
+                        variant="primary"
                         type="button"
                         disabled={!selectedTag || (formData.tags ?? []).includes(selectedTag)}
                         onClick={() => handleAddTag(selectedTag)}
                       >
                         Add Tag
-                      </button>
+                      </GlobalButton>
                     </div>
 
                     <div className={styles.tagListContainer}>
@@ -168,8 +180,10 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                     </select>
                   </div>
 
-                  <GlobalButton type="submit" variant="primary" onClick={() => handleSubmit}>
-                    Update Song
+                  {saveError && <p role="alert">{saveError}</p>}
+
+                  <GlobalButton type="submit" variant="primary" disabled={isSaving} onClick={() => handleSubmit}>
+                    {isSaving ? 'Saving...' : 'Update Song'}
                   </GlobalButton>
                 </form>
               </div>

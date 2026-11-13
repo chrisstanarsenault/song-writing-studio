@@ -1,36 +1,12 @@
-.newLyricModalOuterContainer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.newLyricModalInnerContainer {
-  position: relative;
-  width: min(600px, calc(100% - 32px));
-  height: auto;
-  max-height: calc(100dvh - 32px);
-  overflow-y: auto;
+.newLyricModalCloseButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 30px;
+  color: black;
   background-color: #fff;
-  border-radius: 10px;
-  padding: 20px;
-
-  .newLyricModalCloseButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 30px;
-    color: black;
-    background-color: #fff;
-    padding: 0;
-  }
+  padding: 0;
 }
 
 .newLyricModalContentContainer {
