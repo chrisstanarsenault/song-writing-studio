@@ -34,16 +34,16 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
 
     setFormData(previous => ({
       ...previous,
-      chords: previous.chords?.includes(chord) ? previous.chords : [...(previous.chords ?? []), chord]
+      chords: [...(previous.chords ?? []), chord]
     }))
 
     setSelectedChord('')
   }
 
-  const handleRemoveChord = (chord: string) => {
+  const handleRemoveChord = (indexToRemove: number) => {
     setFormData(previous => ({
       ...previous,
-      chords: (previous.chords ?? []).filter(item => item !== chord)
+      chords: (previous.chords ?? []).filter((_, index) => index !== indexToRemove)
     }))
   }
 
@@ -103,11 +103,11 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
                   </div>
 
                   <div className={styles.newLyricModalFormItemChordsContainer}>
-                    {formData.chords?.map(chord => (
+                    {formData.chords?.map((chord, indexToRemove) => (
                       <div key={chord} className={styles.newLyricModalFormItemChordTag}>
                         <p>{chord}</p>
 
-                        <button type="button" onClick={() => handleRemoveChord(chord)}>
+                        <button type="button" onClick={() => handleRemoveChord(indexToRemove)}>
                           X
                         </button>
                       </div>
