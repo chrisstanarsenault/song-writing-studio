@@ -8,9 +8,9 @@ import { IoTrashOutline } from 'react-icons/io5'
 import styles from './lyric-container.module.css'
 
 interface LyricContainerProps {
-  title: string
+  title: string | null
   chords: string[]
-  lyrics: string
+  lyrics: string | null
   // linkedRecording?: RecordingDetails | null
   // linkedNotes?: NotesDetails | null
   isSelected: boolean
@@ -23,9 +23,9 @@ interface LyricContainerProps {
 }
 
 export const LyricContainer = ({
-  title = 'Verse 1',
-  chords = ['G', 'D', 'Em', 'C'],
-  lyrics = 'Lyrics lyrics lyrics lyrics',
+  title = '',
+  chords = [],
+  lyrics = '',
   // linkedRecording = null,
   // linkedNotes = null,
   isSelected,

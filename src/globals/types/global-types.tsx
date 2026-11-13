@@ -2,19 +2,20 @@ export interface LyricsSection {
   id: string
   title: string | null
   lyrics: string | null
-  chords: string[] | null
+  chords: string[]
   createdAt: string
   lastEdited: string
 }
 
 export type LyricsSectionFormData = Pick<LyricsSection, 'title' | 'chords' | 'lyrics' | 'id'>
+export type SongStatusType = 'Idea' | 'Completed' | 'Archived' | 'In progress'
 
 export interface Song {
   id: string
   title: string
-  sections: LyricsSection[] | null
-  status: string | null
-  tags: string[] | null
+  sections: LyricsSection[]
+  status: SongStatusType | null
+  tags: string[]
   lastEdited: string
   takes: number
   songKey: string | null
@@ -45,7 +46,7 @@ export interface SongTag {
 
 export interface SongStatus {
   id: string
-  name: string
+  name: SongStatusType
   normalizedName: string
   createdAt: string
 }

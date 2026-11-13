@@ -5,7 +5,7 @@ import { IoClose } from 'react-icons/io5'
 import { Modal } from '#globals/components/modal-portal/modal-portal'
 import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
 
-import type { Song } from '#globals/types/global-types'
+import type { Song, SongStatusType } from '#globals/types/global-types'
 import { songsTable } from '#lib/db.ts'
 
 import styles from './edit-song-details-modal.module.css'
@@ -17,7 +17,7 @@ interface EditSongDetailsModalProps {
   songId: string
   details: Details
   tagsList: string[]
-  statusList: string[]
+  statusList: SongStatusType[]
 }
 
 export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, songId }: EditSongDetailsModalProps) => {
@@ -158,7 +158,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                     <select
                       id="status"
                       value={formData.status ?? ''}
-                      onChange={event => setFormData({ ...formData, status: event.target.value })}
+                      onChange={event => setFormData({ ...formData, status: event.target.value as SongStatusType })}
                     >
                       {statusList.map(status => (
                         <option key={status} value={status}>

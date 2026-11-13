@@ -7,9 +7,9 @@ export const createSong = async (): Promise<void> => {
   const newSong: Song = {
     id: crypto.randomUUID(),
     title: 'Untitled song',
-    sections: null,
+    sections: [],
     status: 'Idea',
-    tags: null,
+    tags: [],
     lastEdited: now,
     takes: 0,
     songKey: null,
