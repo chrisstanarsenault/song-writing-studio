@@ -25,8 +25,8 @@ const Header = ({ title, description, buttons, editIcon = false, editIconOnClick
         <div>
           <h2>{title}</h2>
           {editIcon && (
-            <button type="button" className={styles.edit_icon} onClick={editIconOnClick}>
-              <MdEdit />
+            <button type="button" aria-label="Edit song details" className={styles.edit_icon} onClick={editIconOnClick}>
+              <MdEdit aria-hidden="true" />
             </button>
           )}
         </div>
@@ -37,7 +37,12 @@ const Header = ({ title, description, buttons, editIcon = false, editIconOnClick
       {buttons && buttons.length > 0 && (
         <div className={styles.buttons_container}>
           {buttons.map((button: ButtonProps) => (
-            <GlobalButton key={button.title} variant={button.variant} onClick={button.onClick}>
+            <GlobalButton
+              key={button.title}
+              variant={button.variant}
+              aria-label={button.title}
+              onClick={button.onClick}
+            >
               {button.title}
             </GlobalButton>
           ))}
