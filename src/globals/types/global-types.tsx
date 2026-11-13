@@ -27,14 +27,14 @@ export interface Song {
 
 export interface AudioTake {
   id: string
-  songId: number
+  songId: string
   sectionId: string | null // null means entire song
   name: string
   source: 'recorded' | 'uploaded'
   blob: Blob
   mimeType: string
   durationSeconds: number | null
-  createdAt: number
+  createdAt: string
 }
 
 export interface SongTag {
