@@ -77,7 +77,8 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
                   type="text"
                   id="title"
                   name="title"
-                  value={formData.title}
+                  placeholder="Verse, Chorus, etc."
+                  value={formData.title ?? ''}
                   onChange={event => setFormData({ ...formData, title: event.target.value })}
                 />
               </div>
@@ -91,9 +92,11 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
                       type="text"
                       id="chords"
                       name="chords"
+                      placeholder="Add a chord name and press Add Chord"
                       value={selectedChord}
                       onChange={event => setSelectedChord(event.target.value)}
                     />
+
                     <GlobalButton type="button" variant="primary" onClick={() => handleAddChord(selectedChord)}>
                       Add chord
                     </GlobalButton>
@@ -118,7 +121,8 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
                 <textarea
                   id="lyrics"
                   name="lyrics"
-                  value={formData.lyrics}
+                  placeholder="What are the lyrics of this section..."
+                  value={formData.lyrics ?? ''}
                   onChange={event => setFormData({ ...formData, lyrics: event.target.value })}
                 />
               </div>

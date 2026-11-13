@@ -110,10 +110,10 @@ const SongPage = () => {
 
   const details = useMemo(() => {
     return {
-      title: song?.title || 'Untitled song',
-      songKey: song?.songKey || 'Unknown',
-      bpm: song?.bpm || 0,
-      tuning: song?.tuning || 'Unknown',
+      title: song?.title || '',
+      songKey: song?.songKey || null,
+      bpm: song?.bpm || null,
+      tuning: song?.tuning || null,
       tags: song?.tags || [],
       status: song?.status || 'Idea'
     }
@@ -144,17 +144,17 @@ const SongPage = () => {
           <section className={styles.songDetailsSection}>
             <div>
               <p>KEY</p>
-              <p>{song?.songKey || 'Unknown'}</p>
+              <p>{song?.songKey || 'Unknown key'}</p>
             </div>
 
             <div>
               <p>BPM</p>
-              <p>{song?.bpm || 'Unknown'}</p>
+              <p>{song?.bpm || 'No BPM set'}</p>
             </div>
 
             <div>
               <p>Tuning</p>
-              <p>{song?.tuning || 'Unknown'}</p>
+              <p>{song?.tuning || 'No tuning set'}</p>
             </div>
           </section>
 
@@ -166,7 +166,7 @@ const SongPage = () => {
 
             <div>
               <p>Status</p>
-              <p>{song?.status || 'Unknown'}</p>
+              <p>{song?.status || 'Unknown song status'}</p>
             </div>
           </section>
         </div>

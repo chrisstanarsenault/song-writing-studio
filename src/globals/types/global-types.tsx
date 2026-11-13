@@ -1,8 +1,8 @@
 export interface LyricsSection {
   id: string
-  title: string
-  lyrics: string
-  chords: string[]
+  title: string | null
+  lyrics: string | null
+  chords: string[] | null
   createdAt: string
   lastEdited: string
 }
@@ -13,7 +13,7 @@ export interface Song {
   id: string
   title: string
   sections: LyricsSection[] | null
-  status: string
+  status: string | null
   tags: string[] | null
   lastEdited: string
   takes: number
