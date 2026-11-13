@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { toast } from 'react-toastify'
+import { Link } from 'react-router'
 
 import Header from '#globals/components/header/header'
 import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
@@ -12,7 +13,7 @@ import { LyricContainer } from './components/lyric-container/lyric-container.tsx
 import { songsTable, songStatusesTable, songTagsTable } from '#lib/db.ts'
 import { moveSectionUp, moveSectionDown, deleteSection, addSection, updateSection } from '#features/songs/song-data.ts'
 
-import type { SongStatus, SongTag, LyricsSectionFormData } from '#globals/types/global-types.tsx'
+import type { LyricsSectionFormData } from '#globals/types/global-types.tsx'
 
 import styles from './song-page.module.css'
 
@@ -25,35 +26,49 @@ const SongPage = () => {
 
   const { songId } = useParams()
 
-  const song = useLiveQuery(async () => {
-    if (!songId) return null
-    return (await songsTable.get(songId)) ?? null
+  const pageResult = useLiveQuery(async () => {
+    try {
+      const [song, tagRecords, statusRecords] = await Promise.all([
+        songId ? songsTable.get(songId) : Promise.resolve(undefined),
+        songTagsTable.toArray(),
+        songStatusesTable.toArray()
+      ])
+
+      return {
+        status: 'success' as const,
+        song: song ?? null,
+        tags: tagRecords.map(tag => tag.name),
+        statuses: statusRecords.map(status => status.name)
+      }
+    } catch (error) {
+      console.log('Failed to load song:', error)
+
+      return {
+        status: 'error' as const
+      }
+    }
   }, [songId])
 
-  const statuses = useLiveQuery(async () => {
-    const statuses = await songStatusesTable.toArray()
-    return statuses.map((status: SongStatus) => status.name)
-  }, [])
+  const song = pageResult?.status === 'success' ? pageResult.song : null
 
-  const tags = useLiveQuery(async () => {
-    const tags = await songTagsTable.toArray()
-    return tags.map((tag: SongTag) => tag.name)
-  }, [])
-
-  const handleSaveNewLyricsSection = async (formData: LyricsSectionFormData) => {
+  const handleSaveNewLyricsSection = async (formData: LyricsSectionFormData): Promise<void> => {
     try {
-      await addSection(song?.id || '', formData)
+      if (!song) throw new Error('Song not found')
+
+      await addSection(song.id, formData)
 
       setLyricModalState(null)
     } catch (error) {
-      console.error(error)
       toast.error('Failed to add new section')
+      throw error
     }
   }
 
   const handleMoveDown = async (sectionId: string) => {
     try {
-      await moveSectionDown(song?.id || '', sectionId)
+      if (!song) throw new Error('Song not found')
+
+      await moveSectionDown(song.id, sectionId)
     } catch (error) {
       toast.error('Failed to move section up or down')
       throw error
@@ -62,7 +77,9 @@ const SongPage = () => {
 
   const handleMoveUp = async (sectionId: string) => {
     try {
-      await moveSectionUp(song?.id || '', sectionId)
+      if (!song) throw new Error('Song not found')
+
+      await moveSectionUp(song.id, sectionId)
     } catch (error) {
       toast.error('Failed to move section up or down')
       throw error
@@ -80,7 +97,9 @@ const SongPage = () => {
 
   const handleSaveEditedSection = async (formData: LyricsSectionFormData) => {
     try {
-      await updateSection(song?.id || '', formData)
+      if (!song) throw new Error('Song not found')
+
+      await updateSection(song.id, formData)
     } catch (error) {
       toast.error('Failed to update section')
       throw error
@@ -89,7 +108,9 @@ const SongPage = () => {
 
   const handleDelete = async (sectionId: string) => {
     try {
-      await deleteSection(song?.id || '', sectionId)
+      if (!song) throw new Error('Song not found')
+
+      await deleteSection(song.id, sectionId)
     } catch (error) {
       toast.error('Failed to delete section')
       throw error
@@ -119,6 +140,24 @@ const SongPage = () => {
     }
   }, [song])
 
+  if (pageResult === undefined) return <p role="status">Loading...</p>
+
+  if (pageResult.status === 'error') {
+    return (
+      <div role="alert">
+        <p>Couldn't load this song. Please reload to try again.</p>
+      </div>
+    )
+  }
+
+  if (!song) {
+    return (
+      <div>
+        <p>Song not found.</p>
+        <Link to="/">Return to library</Link>
+      </div>
+    )
+  }
   return (
     <div className={styles.background}>
       <Header
@@ -201,26 +240,34 @@ const SongPage = () => {
       {isEditingDetails && (
         <EditSongDetailsModal
           onClose={() => setIsEditingDetails(false)}
-          songId={song?.id || ''}
+          songId={song.id}
           details={details}
-          tagsList={tags || []}
-          statusList={statuses || []}
+          tagsList={pageResult.tags}
+          statusList={pageResult.statuses}
         />
       )}
 
-      {lyricModalState && (
-        <LyricSectionModal
-          key={lyricModalState.mode === 'edit' ? lyricModalState.sectionId : 'new'}
-          onClose={() => setLyricModalState(null)}
-          onSave={async (formData: LyricsSectionFormData) =>
-            lyricModalState.mode === 'create'
-              ? await handleSaveNewLyricsSection(formData as LyricsSectionFormData)
-              : await handleSaveEditedSection(formData as LyricsSectionFormData)
-          }
-          sectionDetails={editingSection ?? {}}
-          mode={lyricModalState.mode}
-        />
-      )}
+      {lyricModalState &&
+        (lyricModalState && lyricModalState.mode === 'edit' && !editingSection ? (
+          <div role="alert">
+            <p>This section no longer exists.</p>
+            <GlobalButton variant="primary" onClick={() => setLyricModalState(null)}>
+              Dismiss
+            </GlobalButton>
+          </div>
+        ) : (
+          <LyricSectionModal
+            key={lyricModalState.mode === 'edit' ? lyricModalState.sectionId : 'new'}
+            onClose={() => setLyricModalState(null)}
+            onSave={async (formData: LyricsSectionFormData) =>
+              lyricModalState.mode === 'create'
+                ? await handleSaveNewLyricsSection(formData as LyricsSectionFormData)
+                : await handleSaveEditedSection(formData as LyricsSectionFormData)
+            }
+            sectionDetails={editingSection ?? {}}
+            mode={lyricModalState.mode}
+          />
+        ))}
     </div>
   )
 }
