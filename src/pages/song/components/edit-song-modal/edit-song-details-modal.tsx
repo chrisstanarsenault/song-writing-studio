@@ -75,6 +75,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                     <input
                       type="text"
                       id="title"
+                      placeholder="What is the title of the song..."
                       value={formData.title ?? ''}
                       onChange={event => setFormData({ ...formData, title: event.target.value ?? '' })}
                     />
@@ -85,6 +86,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                     <input
                       type="text"
                       id="songKey"
+                      placeholder="What is the key of the song..."
                       value={formData.songKey ?? ''}
                       onChange={event => setFormData({ ...formData, songKey: event.target.value ?? '' })}
                     />
@@ -95,6 +97,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                     <input
                       type="number"
                       id="bpm"
+                      placeholder="What is the BPM of the song..."
                       value={formData.bpm ?? ''}
                       onChange={event =>
                         setFormData({ ...formData, bpm: event.target.value === '' ? null : Number(event.target.value) })
@@ -107,6 +110,7 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
                     <input
                       type="text"
                       id="tuning"
+                      placeholder="What is the tuning of the song..."
                       value={formData.tuning ?? ''}
                       onChange={event => setFormData({ ...formData, tuning: event.target.value ?? '' })}
                     />
