@@ -22,6 +22,11 @@
   color: #6746d8;
 }
 
+.alert {
+  background-color: #b42336;
+  color: #fff;
+}
+
 .fullWidth {
   width: 100%;
 }

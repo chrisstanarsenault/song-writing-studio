@@ -1,6 +1,6 @@
 import styles from './global-button.module.css'
 
-type Variant = 'primary' | 'secondary'
+type Variant = 'primary' | 'secondary' | 'alert'
 
 interface GlobalButtonProps {
   children: React.ReactNode
