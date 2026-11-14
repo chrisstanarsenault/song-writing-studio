@@ -17,6 +17,7 @@ export default defineConfig({
       '#styles': fileURLToPath(new URL('./src/styles', import.meta.url)),
       '#utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
       '#features': fileURLToPath(new URL('./src/features', import.meta.url)),
+      '#routes': fileURLToPath(new URL('./src/routes.tsx', import.meta.url)),
     },
   },
 })

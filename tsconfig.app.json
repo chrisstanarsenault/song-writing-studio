@@ -43,6 +43,9 @@
       ],
       "#features/*": [
         "./src/features/*"
+      ],
+      "#routes": [
+        "./src/routes.tsx"
       ]
     }
   },
