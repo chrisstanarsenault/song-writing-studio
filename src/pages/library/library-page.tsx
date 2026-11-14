@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { toast } from 'react-toastify'
 
 import { songsTable, songTagsTable, songStatusesTable } from '#lib/db.ts'
 
@@ -11,6 +13,10 @@ import { GlobalButton } from '#globals/components/global-button/global-button.ts
 import styles from './library-page.module.css'
 
 const LibraryPage = () => {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedTag, setSelectedTag] = useState('all')
+
   const navigate = useNavigate()
 
   const songs = useLiveQuery(async () => {
@@ -24,7 +30,6 @@ const LibraryPage = () => {
 
   const statuses = useLiveQuery(async () => {
     const statusList = await songStatusesTable.toArray()
-    console.log('Statuses', statuses)
     return statusList.map((status: SongStatus) => status)
   }, [])
 
@@ -59,9 +64,30 @@ const LibraryPage = () => {
 
       navigate(`/song/${newSong.id}`)
     } catch (error) {
-      console.error('Error adding song:', error)
+      toast.error('Error adding song: ' + error)
+      console.error('Error adding song: ' + error)
+      throw error
     }
   }
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStatus(event.target.value)
+  }
+
+  const handleTagChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTag(event.target.value)
+  }
+
+  const filteredSongs = songs?.filter(song => {
+    const matchesSearch = song.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
+    const matchesStatus = selectedStatus === 'all' || song.status === selectedStatus
+    const matchesTags = selectedTag === 'all' || song.tags.includes(selectedTag)
+
+    console.log(matchesSearch, matchesStatus, matchesTags)
+    console.log('song', song.title)
+
+    return matchesSearch && matchesStatus && matchesTags
+  })
 
   if (!songs || !statuses || !tags) {
     return (
@@ -84,26 +110,32 @@ const LibraryPage = () => {
 
       <section className={styles.grid_container}>
         <section className={styles.search_container}>
-          <input type="text" placeholder="Search songs..." />
+          <input
+            type="text"
+            placeholder="Search songs..."
+            value={searchQuery}
+            onChange={event => setSearchQuery(event.target.value)}
+          />
 
-          <select id="status-select" name="status" aria-label="Status">
+          <select id="status-select" name="status" aria-label="Status" onChange={handleStatusChange}>
             <option value="all">All statuses</option>
             {statuses.map(status => (
-              <option key={status.id} value={status.normalizedName}>
+              <option key={status.id} value={status.name}>
                 {status.name}
               </option>
             ))}
           </select>
 
-          <select id="tags-select" name="tags" aria-label="Tags">
+          <select id="tags-select" name="tags" aria-label="Tags" onChange={handleTagChange}>
             <option value="all">All tags</option>
             {tags.map(tag => (
-              <option key={tag.id} value={tag.normalizedName}>
+              <option key={tag.id} value={tag.name}>
                 {tag.name}
               </option>
             ))}
           </select>
         </section>
+
         <section className={styles.stats_container}>
           <div className={styles.stats_item}>
             <h4>Total songs</h4>
@@ -127,6 +159,7 @@ const LibraryPage = () => {
               <section className={styles.no_songs_container}>
                 <h4>No songs found</h4>
                 <p>Create a new song to get started.</p>
+
                 <GlobalButton variant="primary" onClick={newSongClick}>
                   Create new song
                 </GlobalButton>
@@ -144,7 +177,7 @@ const LibraryPage = () => {
                 </thead>
 
                 <tbody className={styles.content_table_body}>
-                  {songs.map(song => {
+                  {filteredSongs?.map(song => {
                     return (
                       <tr key={song.id} className={styles.content_table_row}>
                         <td>
@@ -169,6 +202,7 @@ const LibraryPage = () => {
             <GlobalButton variant="primary" onClick={() => {}}>
               Export backup
             </GlobalButton>
+
             <GlobalButton variant="secondary" onClick={() => {}}>
               Import backup
             </GlobalButton>
