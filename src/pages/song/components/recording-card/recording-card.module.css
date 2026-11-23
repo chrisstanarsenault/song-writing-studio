@@ -1,0 +1,83 @@
+.recordingCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.recordingCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recordingCardTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.recordingCardDuration {
+  font-size: 0.8rem;
+  color: #596579;
+}
+
+.recordingCardDetailsSection {
+  display: flex;
+  gap: 5px;
+}
+
+.recordingCardDetailsSectionItem {
+  font-size: 0.8rem;
+  color: #596579;
+}
+
+.recordingCardControls {
+  display: flex;
+  gap: 10px;
+}
+
+.recordingCardControlsButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6746d8;
+}
+
+.recordingCardControlsOptions {
+  display: flex;
+  gap: 10px;
+}
+
+.recordingCardControlsOptionsButton {
+  margin-right: 5px;
+}
+
+.recordingCardControlsSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recordingCardControls {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recordingCardControlsOptionsButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: #596579;
+}

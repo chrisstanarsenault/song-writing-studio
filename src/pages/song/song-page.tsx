@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { toast } from 'react-toastify'
@@ -9,8 +9,9 @@ import { GlobalButton } from '#globals/components/global-button/global-button.ts
 import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-details-modal.tsx'
 import { LyricSectionModal } from './components/lyric-section-modal/lyric-section-modal.tsx'
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
+import { RecordingContainer } from './components/recording-container/recording-container.tsx'
 
-import { songsTable, songStatusesTable, songTagsTable } from '#lib/db.ts'
+import { songsTable, songStatusesTable, songTagsTable, recordingDetailsTable } from '#lib/db.ts'
 import { moveSectionUp, moveSectionDown, deleteSection, addSection, updateSection } from '#features/songs/song-data.ts'
 
 import type { LyricsSectionFormData } from '#globals/types/global-types.tsx'
@@ -50,6 +51,28 @@ const SongPage = () => {
   }, [songId])
 
   const song = pageResult?.status === 'success' ? pageResult.song : null
+
+  const recordings = useLiveQuery(async () => {
+    try {
+      const recordings = await recordingDetailsTable.toArray()
+
+      return recordings
+    } catch (error) {
+      console.log('Failed to load recordings:', error)
+
+      return []
+    }
+  })
+
+  const filteredRecordings = useMemo(() => {
+    if (!song || !recordings) return []
+
+    if (selectedSectionId) {
+      return recordings?.filter(recording => recording.sectionId === selectedSectionId && recording.songId === song?.id)
+    }
+
+    return recordings?.filter(recording => recording.songId === song?.id)
+  }, [song, recordings, selectedSectionId])
 
   const handleSaveNewLyricsSection = async (formData: LyricsSectionFormData): Promise<void> => {
     try {
@@ -158,6 +181,9 @@ const SongPage = () => {
       </div>
     )
   }
+
+  const selectedSection = song.sections.find(section => section.id === selectedSectionId)
+
   return (
     <div className={styles.background}>
       <Header
@@ -231,9 +257,12 @@ const SongPage = () => {
             </GlobalButton>
           </section>
 
-          <section className={styles.recordingContainer}>
-            <p>Recording</p>
-          </section>
+          <RecordingContainer
+            songId={song.id}
+            sectionId={selectedSectionId}
+            sections={song.sections}
+            recordings={filteredRecordings}
+          />
         </section>
       </section>
 

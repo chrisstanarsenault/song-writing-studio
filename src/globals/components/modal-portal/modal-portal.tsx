@@ -1,6 +1,8 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
+import { IoClose } from 'react-icons/io5'
+
 import styles from './modal-portal.module.css'
 
 interface ModalProps {
@@ -46,6 +48,10 @@ export const Modal = ({ children, titleId, onClose }: ModalProps) => {
         onClose()
       }}
     >
+      <button type="button" aria-label="Close song details" onClick={onClose} className={styles.modalCloseButton}>
+        <IoClose aria-hidden="true" />
+      </button>
+
       {children}
     </dialog>,
     container

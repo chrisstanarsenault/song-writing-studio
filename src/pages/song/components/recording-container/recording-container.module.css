@@ -1,0 +1,20 @@
+.recordingContainer {
+  width: 30%;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+
+  .recordingContainerTitle {
+    font-size: 25px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .recordingContainerCards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

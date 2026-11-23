@@ -69,10 +69,6 @@ export const EditSongDetailsModal = ({ details, onClose, tagsList, statusList, s
     <Modal titleId={titleId} onClose={onClose}>
       <section className={styles.modalOuterContainer}>
         <div className={styles.modalInnerContainer}>
-          <button type="button" aria-label="Close song details" onClick={onClose} className={styles.modalCloseButton}>
-            <IoClose aria-hidden="true" />
-          </button>
-
           <div className={styles.modalContentContainer}>
             <h3 id={titleId}>Edit Details</h3>
 
