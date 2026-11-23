@@ -69,15 +69,6 @@ export const LyricSectionModal = ({ onClose, onSave, sectionDetails, mode }: Lyr
 
   return (
     <Modal titleId={titleId} onClose={onClose}>
-      <button
-        type="button"
-        className={styles.newLyricModalCloseButton}
-        aria-label="Close section editor"
-        onClick={onClose}
-      >
-        <IoClose />
-      </button>
-
       <div className={styles.newLyricModalContentContainer}>
         <h3 id={titleId}>{mode === 'create' ? 'New Section' : 'Edit Section'}</h3>
 

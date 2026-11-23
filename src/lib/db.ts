@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import type { Song, SongTag, SongStatus } from '../globals/types/global-types.tsx'
+import type { Song, SongTag, SongStatus, RecordingDetails, RecordingAudio } from '../globals/types/global-types.tsx'
 
 export const db = new Dexie('song-library')
 
@@ -35,6 +35,13 @@ db.version(1).stores({
   statuses: 'id, name, normalizedName, createdAt',
 })
 
+db.version(2).stores({
+  recordingDetails: 'id, name, songId, sectionId, source, mimeType, durationSeconds, blob, createdAt, lastEdited',
+  recordingAudio: 'recordingId'
+})
+
 export const songsTable = db.table<Song, string>('songs')
 export const songTagsTable = db.table<SongTag, string>('tags')
 export const songStatusesTable = db.table<SongStatus, string>('statuses')
+export const recordingDetailsTable = db.table<RecordingDetails, string>('recordingDetails')
+export const recordingAudioTable = db.table<RecordingAudio, string>('recordingAudio')

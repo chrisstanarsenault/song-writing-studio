@@ -8,6 +8,11 @@ export interface LyricsSection {
 }
 
 export type LyricsSectionFormData = Pick<LyricsSection, 'title' | 'chords' | 'lyrics' | 'id'>
+export type RecordingFormData = Pick<
+  RecordingDetails,
+  'name' | 'songId' | 'sectionId' | 'source' | 'mimeType' | 'durationSeconds' | 'blob'
+>
+
 export type SongStatusType = 'Idea' | 'Completed' | 'Archived' | 'In progress'
 
 export interface Song {
@@ -23,18 +28,6 @@ export interface Song {
   tuning: string | null
   createdAt: string
   notes: string | null
-}
-
-export interface AudioTake {
-  id: string
-  songId: string
-  sectionId: string | null // null means entire song
-  name: string
-  source: 'recorded' | 'uploaded'
-  blob: Blob
-  mimeType: string
-  durationSeconds: number | null
-  createdAt: string
 }
 
 export interface SongTag {
@@ -56,8 +49,12 @@ export interface RecordingDetails {
   songId: string
   sectionId: string | null // null means entire song
   name: string
-  duration: number | null
+  source: 'recorded' | 'uploaded'
+  mimeType: string
+  durationSeconds: number
+  blob: Blob
   createdAt: string
+  lastEdited: string
 }
 
 export interface RecordingAudio {
@@ -71,4 +68,14 @@ export interface NotesDetails {
   sectionId: string | null // null means entire song
   content: string
   createdAt: string
+}
+
+export interface RecordingFormInput {
+  name: string
+  songId: string | null
+  sectionId: string | null
+  source: string
+  mimeType: string
+  durationSeconds: number
+  blob: Blob | null
 }
