@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { toast } from 'react-toastify'
@@ -181,8 +181,6 @@ const SongPage = () => {
       </div>
     )
   }
-
-  const selectedSection = song.sections.find(section => section.id === selectedSectionId)
 
   return (
     <div className={styles.background}>

@@ -34,11 +34,6 @@
   color: #596579;
 }
 
-.recordingCardControls {
-  display: flex;
-  gap: 10px;
-}
-
 .recordingCardControlsButton {
   background: none;
   border: none;
@@ -47,15 +42,6 @@
   align-items: center;
   gap: 5px;
   color: #6746d8;
-}
-
-.recordingCardControlsOptions {
-  display: flex;
-  gap: 10px;
-}
-
-.recordingCardControlsOptionsButton {
-  margin-right: 5px;
 }
 
 .recordingCardControlsSection {
@@ -69,6 +55,15 @@
   gap: 10px;
   justify-content: space-between;
   align-items: center;
+}
+
+.recordingCardControlsOptions {
+  display: flex;
+  gap: 10px;
+}
+
+.recordingCardControlsOptionsButton {
+  margin-right: 5px;
 }
 
 .recordingCardControlsOptionsButton {
