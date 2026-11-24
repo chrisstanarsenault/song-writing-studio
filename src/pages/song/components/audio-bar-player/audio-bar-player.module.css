@@ -1,0 +1,22 @@
+.audioBarPlayerControlsButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6746d8;
+}
+
+.audioBarPlayerControlsSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.audioBarPlayerControls {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-import { FaPlay, FaPause } from 'react-icons/fa'
-
 import type { RecordingDetails } from '#globals/types/global-types'
+
+import { AudioBarPlayer } from '../audio-bar-player/audio-bar-player'
 
 import styles from './recording-card.module.css'
 
@@ -39,20 +39,12 @@ export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) =
     return `Recorded ${date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`
   }
 
-  const handlePlay = () => {
-    setIsPlaying(true)
+  const handleRename = (id: string) => {
+    console.log('Rename', id)
   }
 
-  const handlePause = () => {
-    setIsPlaying(false)
-  }
-
-  const handleRename = () => {
-    console.log('Rename')
-  }
-
-  const handleDelete = () => {
-    console.log('Delete')
+  const handleDelete = (id: string) => {
+    console.log('Delete', id)
   }
 
   return (
@@ -68,33 +60,11 @@ export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) =
         </p>
       </div>
 
-      <div className={styles.recordingCardControlsSection}>
-        <div className={styles.recordingCardControls}>
-          {!isPlaying ? (
-            <div>
-              <button className={styles.recordingCardControlsButton} onClick={handlePlay}>
-                <FaPlay /> Play
-              </button>
-            </div>
-          ) : (
-            <div>
-              <button className={styles.recordingCardControlsButton} onClick={handlePause}>
-                <FaPause /> Playing
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.recordingCardControlsOptions}>
-          <button className={styles.recordingCardControlsOptionsButton} onClick={handleRename}>
-            Rename
-          </button>
-
-          <button className={styles.recordingCardControlsOptionsButton} onClick={handleDelete}>
-            Delete
-          </button>
-        </div>
-      </div>
+      <AudioBarPlayer
+        audioBlob={recording.blob}
+        handleOnRemove={() => handleDelete(recording.id)}
+        handleOnEdit={() => handleRename(recording.id)}
+      />
     </div>
   )
 }
