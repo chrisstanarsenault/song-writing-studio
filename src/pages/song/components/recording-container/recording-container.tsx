@@ -5,7 +5,7 @@ import { GlobalButton } from '#globals/components/global-button/global-button'
 import { RecordingModal } from '#pages/song/components/recording-modal/recording-modal.tsx'
 import { RecordingCard } from '#pages/song/components/recording-card/recording-card.tsx'
 
-import { addRecording } from '#features/recordings/recording-data.ts'
+import { addRecording, updateRecording, deleteRecording } from '#features/recordings/recording-data.ts'
 
 import type {
   RecordingFormInput,
@@ -61,7 +61,7 @@ export const RecordingContainer = ({ songId, sectionId, sections, recordings }: 
       </div>
 
       <GlobalButton variant="primary" onClick={() => setRecordingModalState({ mode: 'create' })}>
-        Record
+        Record Idea
       </GlobalButton>
 
       {recordingModalState && (
