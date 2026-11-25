@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import type { RecordingDetails } from '#globals/types/global-types'
 
 import { AudioBarPlayer } from '../audio-bar-player/audio-bar-player'
@@ -9,11 +7,11 @@ import styles from './recording-card.module.css'
 interface RecordingCardProps {
   recording: RecordingDetails
   sectionTitle: string | null
+  handleOnEdit: (id: string, name: string) => void
+  handleOnRemove: (id: string) => void
 }
 
-export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) => {
-  const [isPlaying, setIsPlaying] = useState(false)
-
+export const RecordingCard = ({ recording, sectionTitle, handleOnRemove, handleOnEdit }: RecordingCardProps) => {
   const formatDuration = () => {
     if (!recording.durationSeconds) return '0:00'
 
@@ -39,14 +37,6 @@ export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) =
     return `Recorded ${date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`
   }
 
-  const handleRename = (id: string) => {
-    console.log('Rename', id)
-  }
-
-  const handleDelete = (id: string) => {
-    console.log('Delete', id)
-  }
-
   return (
     <div className={styles.recordingCard}>
       <div className={styles.recordingCardHeader}>
@@ -62,8 +52,8 @@ export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) =
 
       <AudioBarPlayer
         audioBlob={recording.blob}
-        handleOnRemove={() => handleDelete(recording.id)}
-        handleOnEdit={() => handleRename(recording.id)}
+        handleOnRemove={() => handleOnRemove(recording.id)}
+        handleOnEdit={() => handleOnEdit(recording.id, recording.name)}
       />
     </div>
   )

@@ -41,6 +41,24 @@ export const RecordingContainer = ({ songId, sectionId, sections, recordings }: 
     }
   }
 
+  const handleUpdateRecording = async (id: string, name: string) => {
+    console.log('Edit', id, name)
+  }
+
+  const handleDeleteRecording = async (id: string) => {
+    console.log('Remove', id)
+
+    try {
+      if (!songId) throw new Error('Song not found')
+      if (!id) throw new Error('Recording not found')
+
+      await deleteRecording(id)
+    } catch (error) {
+      toast.error('Failed to update recording')
+      throw error
+    }
+  }
+
   return (
     <section className={styles.recordingContainer}>
       <p className={styles.recordingContainerTitle}>Audio</p>
@@ -53,7 +71,15 @@ export const RecordingContainer = ({ songId, sectionId, sections, recordings }: 
                 ? 'Entire song'
                 : (sections.find(section => section.id === recording.sectionId)?.title ?? 'Section unavailable')
 
-            return <RecordingCard key={recording.id} recording={recording} sectionTitle={sectionTitle} />
+            return (
+              <RecordingCard
+                key={recording.id}
+                recording={recording}
+                sectionTitle={sectionTitle}
+                handleOnEdit={handleUpdateRecording}
+                handleOnRemove={handleDeleteRecording}
+              />
+            )
           })
         ) : (
           <p>No recordings found</p>
