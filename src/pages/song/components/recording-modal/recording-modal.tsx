@@ -1,27 +1,18 @@
 import { useId, useRef, useState, useEffect } from 'react'
 
-import type { RecordingDetails, RecordingFormInput } from '#globals/types/global-types'
+import type { RecordingFormInput } from '#globals/types/global-types'
 
 import { Modal } from '#globals/components/modal-portal/modal-portal'
 import { GlobalButton } from '#globals/components/global-button/global-button'
 
 import styles from './recording-modal.module.css'
 
-type RecordingModalProps =
-  | {
-      mode: 'create'
-      songId: string
-      sectionId: string | null
-      handleSubmit: (recordingFormInput: RecordingFormInput) => Promise<void>
-      onClose: () => void
-    }
-  | {
-      mode: 'edit'
-      recording?: RecordingDetails
-      handleSubmit: (recordingFormInput: RecordingFormInput) => Promise<void>
-      onClose: () => void
-    }
-
+type RecordingModalProps = {
+  songId: string
+  sectionId: string | null
+  handleSubmit: (recordingFormInput: RecordingFormInput) => Promise<void>
+  onClose: () => void
+}
 type RecordingStatus = 'idle' | 'requesting' | 'recording' | 'stopping' | 'preview' | 'error'
 
 interface RecorderControls {
@@ -29,7 +20,7 @@ interface RecorderControls {
   stop: () => Promise<{ audioBlob: Blob; audioUrl: string }>
 }
 
-export const RecordingModal = ({ mode, songId, sectionId, recording, handleSubmit, onClose }: RecordingModalProps) => {
+export const RecordingModal = ({ songId, sectionId, handleSubmit, onClose }: RecordingModalProps) => {
   const recorderRef = useRef<RecorderControls | null>(null)
   const startedAtRef = useRef<number | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
