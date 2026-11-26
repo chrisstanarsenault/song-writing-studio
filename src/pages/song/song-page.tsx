@@ -42,7 +42,7 @@ const SongPage = () => {
         statuses: statusRecords.map(status => status.name)
       }
     } catch (error) {
-      console.log('Failed to load song:', error)
+      console.error('Failed to load song:', error)
 
       return {
         status: 'error' as const
@@ -58,7 +58,7 @@ const SongPage = () => {
 
       return recordings
     } catch (error) {
-      console.log('Failed to load recordings:', error)
+      console.error('Failed to load recordings:', error)
 
       return []
     }

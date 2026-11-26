@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import type { Song, SongTag, SongStatus, RecordingDetails, RecordingAudio } from '../globals/types/global-types.tsx'
+import type { Song, SongTag, SongStatus, RecordingDetails, RecordingAudio } from '#globals/types/global-types.tsx'
 
 export const db = new Dexie('song-library')
 

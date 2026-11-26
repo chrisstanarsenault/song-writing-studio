@@ -12,7 +12,7 @@ export type RecordingFormData = Pick<
   RecordingDetails,
   'name' | 'songId' | 'sectionId' | 'source' | 'mimeType' | 'durationSeconds' | 'blob'
 >
-
+export type UpdateRecordingFormDataInput = Pick<RecordingDetails, 'name'>
 export type SongStatusType = 'Idea' | 'Completed' | 'Archived' | 'In progress'
 
 export interface Song {

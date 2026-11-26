@@ -9,15 +9,19 @@ import styles from './recording-card.module.css'
 interface RecordingCardProps {
   recording: RecordingDetails
   sectionTitle: string | null
+  handleOnEdit: (id: string, name: string) => void
+  handleOnRemove: (id: string) => void
 }
 
-export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) => {
-  const [isPlaying, setIsPlaying] = useState(false)
+export const RecordingCard = ({ recording, sectionTitle, handleOnRemove, handleOnEdit }: RecordingCardProps) => {
+  const [currentDuration, setCurrentDuration] = useState(0)
+
+  const remainingSeconds = Math.max(0, recording.durationSeconds - currentDuration)
 
   const formatDuration = () => {
     if (!recording.durationSeconds) return '0:00'
 
-    const totalSeconds = Math.floor(recording.durationSeconds)
+    const totalSeconds = Math.floor(remainingSeconds)
     const minutes = Math.floor(totalSeconds / 60)
     const seconds = totalSeconds % 60
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
@@ -39,14 +43,6 @@ export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) =
     return `Recorded ${date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`
   }
 
-  const handleRename = (id: string) => {
-    console.log('Rename', id)
-  }
-
-  const handleDelete = (id: string) => {
-    console.log('Delete', id)
-  }
-
   return (
     <div className={styles.recordingCard}>
       <div className={styles.recordingCardHeader}>
@@ -62,8 +58,9 @@ export const RecordingCard = ({ recording, sectionTitle }: RecordingCardProps) =
 
       <AudioBarPlayer
         audioBlob={recording.blob}
-        handleOnRemove={() => handleDelete(recording.id)}
-        handleOnEdit={() => handleRename(recording.id)}
+        handleOnRemove={() => handleOnRemove(recording.id)}
+        handleOnEdit={() => handleOnEdit(recording.id, recording.name)}
+        handleOnDurationChange={duration => setCurrentDuration(duration)}
       />
     </div>
   )

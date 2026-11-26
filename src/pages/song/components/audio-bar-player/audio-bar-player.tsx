@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { useWavesurfer } from '@wavesurfer/react'
 import { FaPlay, FaPause } from 'react-icons/fa'
 
@@ -8,22 +8,29 @@ interface AudioBarPlayerProps {
   audioBlob: Blob
   handleOnRemove: () => void
   handleOnEdit: () => void
+  handleOnDurationChange: (duration: number) => void
 }
 
-export const AudioBarPlayer = ({ audioBlob, handleOnRemove, handleOnEdit }: AudioBarPlayerProps) => {
+export const AudioBarPlayer = ({
+  audioBlob,
+  handleOnRemove,
+  handleOnEdit,
+  handleOnDurationChange
+}: AudioBarPlayerProps) => {
   const containerRef = useRef(null)
-  const [isPlaying, setIsPlaying] = useState(false)
 
   // Initialize wavesurfer
-  const { wavesurfer, isReady } = useWavesurfer({
+  const { wavesurfer, isReady, isPlaying } = useWavesurfer({
     container: containerRef,
     height: 60,
-    waveColor: '#cbd5e1', // Unplayed bar color
-    progressColor: '#3b82f6', // Moving progress bar color
+    waveColor: '#596579', // Unplayed bar color
+    progressColor: '#6746d8', // Moving progress bar color
     cursorColor: 'transparent', // Hides the vertical playhead line for a cleaner look
-    barWidth: 3, // Turns the wave into vertical bars
+    barWidth: 5, // Turns the wave into vertical bars
+    barMinHeight: 4, // Minimum height of the bars
+    barHeight: 4, // Maximum height of the bars
     barGap: 2, // Space between bars
-    barRadius: 3 // Rounded bar edges
+    barRadius: 4 // Rounded bar edges
   })
 
   // Convert the Blob to a browser-playable URL
@@ -53,36 +60,36 @@ export const AudioBarPlayer = ({ audioBlob, handleOnRemove, handleOnEdit }: Audi
     if (wavesurfer) {
       wavesurfer.playPause()
     }
-
-    if (isPlaying) {
-      setIsPlaying(false)
-    } else {
-      setIsPlaying(true)
-    }
   }
 
+  useEffect(() => {
+    if (!wavesurfer) return
+
+    return wavesurfer.on('timeupdate', handleOnDurationChange)
+  }, [wavesurfer, handleOnDurationChange])
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', maxWidth: '400px' }}>
+    <div className={styles.audioBarPlayerContainer}>
+      {/* WaveSurfer renders the bars inside this div */}
+      <div ref={containerRef} className={styles.audioBarPlayerWaveSurferContainer} />
+
       <div className={styles.audioBarPlayerControlsSection}>
         <div className={styles.audioBarPlayerControls}>
           <button className={styles.audioBarPlayerControlsButton} onClick={togglePlay} disabled={!isReady}>
             {!isPlaying ? <FaPlay /> : <FaPause />} {isPlaying ? 'Playing' : 'Play'}
           </button>
         </div>
+
+        <div className={styles.audioBarPlayerControlsOptions}>
+          <button className={styles.audioBarPlayerControlsOptionsButton} onClick={handleOnEdit}>
+            Rename
+          </button>
+
+          <button className={styles.audioBarPlayerControlsOptionsButton} onClick={handleOnRemove}>
+            Delete
+          </button>
+        </div>
       </div>
-
-      <div className={styles.recordingCardControlsOptions}>
-        <button className={styles.recordingCardControlsOptionsButton} onClick={handleOnEdit}>
-          Rename
-        </button>
-
-        <button className={styles.recordingCardControlsOptionsButton} onClick={handleOnRemove}>
-          Delete
-        </button>
-      </div>
-
-      {/* WaveSurfer renders the bars inside this div */}
-      <div ref={containerRef} style={{ flex: 1 }} />
     </div>
   )
 }
