@@ -30,7 +30,7 @@ export const UpdateRecordingModal = ({ name, sectionId, handleSubmit, onClose }:
     event.preventDefault()
 
     if (typeof formData.name !== 'string') {
-      console.log('error')
+      console.error('error submitting form: name is not a string')
       setUpdateRecordingError('Please enter a name')
       return
     }

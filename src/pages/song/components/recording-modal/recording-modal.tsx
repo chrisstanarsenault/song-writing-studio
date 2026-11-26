@@ -154,7 +154,7 @@ export const RecordingModal = ({ songId, sectionId, handleSubmit, onClose }: Rec
     event.preventDefault()
 
     if (typeof formData.name !== 'string' || !formData.blob) {
-      console.log('error')
+      console.error('error submitting form: name or blob is missing')
       setRecordingError('Please enter a name and record audio.')
       return
     }

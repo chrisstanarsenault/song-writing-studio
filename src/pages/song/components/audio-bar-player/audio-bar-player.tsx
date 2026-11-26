@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { useWavesurfer } from '@wavesurfer/react'
 import { FaPlay, FaPause } from 'react-icons/fa'
 
@@ -8,11 +8,16 @@ interface AudioBarPlayerProps {
   audioBlob: Blob
   handleOnRemove: () => void
   handleOnEdit: () => void
+  handleOnDurationChange: (duration: number) => void
 }
 
-export const AudioBarPlayer = ({ audioBlob, handleOnRemove, handleOnEdit }: AudioBarPlayerProps) => {
+export const AudioBarPlayer = ({
+  audioBlob,
+  handleOnRemove,
+  handleOnEdit,
+  handleOnDurationChange
+}: AudioBarPlayerProps) => {
   const containerRef = useRef(null)
-  // const [isPlaying, setIsPlaying] = useState(false)
 
   // Initialize wavesurfer
   const { wavesurfer, isReady, isPlaying } = useWavesurfer({
@@ -56,6 +61,12 @@ export const AudioBarPlayer = ({ audioBlob, handleOnRemove, handleOnEdit }: Audi
       wavesurfer.playPause()
     }
   }
+
+  useEffect(() => {
+    if (!wavesurfer) return
+
+    return wavesurfer.on('timeupdate', handleOnDurationChange)
+  }, [wavesurfer, handleOnDurationChange])
 
   return (
     <div className={styles.audioBarPlayerContainer}>

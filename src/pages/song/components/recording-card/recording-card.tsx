@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import type { RecordingDetails } from '#globals/types/global-types'
 
 import { AudioBarPlayer } from '../audio-bar-player/audio-bar-player'
@@ -12,10 +14,14 @@ interface RecordingCardProps {
 }
 
 export const RecordingCard = ({ recording, sectionTitle, handleOnRemove, handleOnEdit }: RecordingCardProps) => {
+  const [currentDuration, setCurrentDuration] = useState(0)
+
+  const remainingSeconds = Math.max(0, recording.durationSeconds - currentDuration)
+
   const formatDuration = () => {
     if (!recording.durationSeconds) return '0:00'
 
-    const totalSeconds = Math.floor(recording.durationSeconds)
+    const totalSeconds = Math.floor(remainingSeconds)
     const minutes = Math.floor(totalSeconds / 60)
     const seconds = totalSeconds % 60
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
@@ -54,6 +60,7 @@ export const RecordingCard = ({ recording, sectionTitle, handleOnRemove, handleO
         audioBlob={recording.blob}
         handleOnRemove={() => handleOnRemove(recording.id)}
         handleOnEdit={() => handleOnEdit(recording.id, recording.name)}
+        handleOnDurationChange={duration => setCurrentDuration(duration)}
       />
     </div>
   )
