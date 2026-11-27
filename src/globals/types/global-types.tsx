@@ -15,6 +15,9 @@ export type RecordingFormData = Pick<
 export type UpdateRecordingFormDataInput = Pick<RecordingDetails, 'name'>
 export type SongStatusType = 'Idea' | 'Completed' | 'Archived' | 'In progress'
 
+export type NoteFormInput = Pick<NotesDetails, 'name' | 'content'>
+export type CreateNoteInput = NoteFormInput & Pick<NotesDetails, 'songId' | 'sectionId'>
+
 export interface Song {
   id: string
   title: string
@@ -67,7 +70,9 @@ export interface NotesDetails {
   songId: string
   sectionId: string | null // null means entire song
   content: string
+  name: string
   createdAt: string
+  lastEdited: string
 }
 
 export interface RecordingFormInput {

@@ -4,7 +4,7 @@ type Variant = 'primary' | 'secondary' | 'alert'
 
 interface GlobalButtonProps {
   children: React.ReactNode
-  variant: Variant
+  variant?: Variant
   disabled?: boolean
   fullWidth?: boolean
   type?: 'button' | 'submit' | 'reset'
@@ -14,7 +14,7 @@ interface GlobalButtonProps {
 
 export const GlobalButton = ({
   children,
-  variant,
+  variant = 'primary',
   disabled,
   fullWidth,
   type = 'button',
