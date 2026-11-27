@@ -85,8 +85,6 @@ export const RecordingContainer = ({ songId, sectionId, sections, recordings }: 
 
   return (
     <section className={styles.recordingContainer}>
-      <p className={styles.recordingContainerTitle}>Audio</p>
-
       <div className={styles.recordingContainerCards}>
         {recordings.length > 0 ? (
           recordings.map(recording => {

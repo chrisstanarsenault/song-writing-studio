@@ -10,6 +10,7 @@ import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-det
 import { LyricSectionModal } from './components/lyric-section-modal/lyric-section-modal.tsx'
 import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
 import { RecordingContainer } from './components/recording-container/recording-container.tsx'
+import { RecordingNotesContainer } from './components/recording-notes-container/recording-notes-container.tsx'
 
 import { songsTable, songStatusesTable, songTagsTable, recordingDetailsTable } from '#lib/db.ts'
 import { moveSectionUp, moveSectionDown, deleteSection, addSection, updateSection } from '#features/songs/song-data.ts'
@@ -19,11 +20,13 @@ import type { LyricsSectionFormData } from '#globals/types/global-types.tsx'
 import styles from './song-page.module.css'
 
 type SectionModalState = { mode: 'create' } | { mode: 'edit'; sectionId: string } | null
+type Tab = 'recordings' | 'notes'
 
 const SongPage = () => {
   const [isEditingDetails, setIsEditingDetails] = useState(false)
   const [lyricModalState, setLyricModalState] = useState<SectionModalState>(null)
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null)
+  const [selectedTab, setSelectedTab] = useState<Tab>('recordings')
 
   const { songId } = useParams()
 
@@ -255,11 +258,12 @@ const SongPage = () => {
             </GlobalButton>
           </section>
 
-          <RecordingContainer
+          <RecordingNotesContainer
             songId={song.id}
             sectionId={selectedSectionId}
-            sections={song.sections}
-            recordings={filteredRecordings}
+            sections={song.sections ?? []}
+            recordings={filteredRecordings ?? []}
+            notes={[]}
           />
         </section>
       </section>
