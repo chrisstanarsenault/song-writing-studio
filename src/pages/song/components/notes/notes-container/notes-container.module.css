@@ -1,0 +1,16 @@
+.notesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #fff;
+  height: 100%;
+
+  button {
+    margin-top: auto;
+  }
+}
+
+.notesContainerTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+}

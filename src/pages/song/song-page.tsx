@@ -7,16 +7,17 @@ import { Link } from 'react-router'
 import Header from '#globals/components/header/header'
 import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
 import { EditSongDetailsModal } from './components/edit-song-modal/edit-song-details-modal.tsx'
-import { LyricSectionModal } from './components/lyric-section-modal/lyric-section-modal.tsx'
-import { LyricContainer } from './components/lyric-container/lyric-container.tsx'
-import { RecordingContainer } from './components/recording-container/recording-container.tsx'
+import { LyricSectionModal } from './components/lyrics/lyric-section-modal/lyric-section-modal.tsx'
+import { LyricContainer } from './components/lyrics/lyric-container/lyric-container.tsx'
+import { RecordingNotesContainer } from './components/recording-notes-container/recording-notes-container.tsx'
 
-import { songsTable, songStatusesTable, songTagsTable, recordingDetailsTable } from '#lib/db.ts'
+import { songsTable, songStatusesTable, songTagsTable, recordingDetailsTable, notesTable } from '#lib/db.ts'
 import { moveSectionUp, moveSectionDown, deleteSection, addSection, updateSection } from '#features/songs/song-data.ts'
 
 import type { LyricsSectionFormData } from '#globals/types/global-types.tsx'
 
 import styles from './song-page.module.css'
+import { NotesCard } from './components/notes/notes-card/notes-card.tsx'
 
 type SectionModalState = { mode: 'create' } | { mode: 'edit'; sectionId: string } | null
 
@@ -86,6 +87,28 @@ const SongPage = () => {
       throw error
     }
   }
+
+  const notes = useLiveQuery(async () => {
+    try {
+      const notes = await notesTable.toArray()
+
+      return notes
+    } catch (error) {
+      console.error('Failed to load notes:', error)
+
+      return []
+    }
+  }, [songId])
+
+  const filteredNotes = useMemo(() => {
+    if (!song || !notes) return []
+
+    if (selectedSectionId) {
+      return notes?.filter(note => note.sectionId === selectedSectionId && note.songId === song?.id)
+    }
+
+    return notes?.filter(note => note.songId === song?.id)
+  }, [song, notes, selectedSectionId])
 
   const handleMoveDown = async (sectionId: string) => {
     try {
@@ -255,11 +278,12 @@ const SongPage = () => {
             </GlobalButton>
           </section>
 
-          <RecordingContainer
+          <RecordingNotesContainer
             songId={song.id}
             sectionId={selectedSectionId}
-            sections={song.sections}
-            recordings={filteredRecordings}
+            sections={song.sections ?? []}
+            recordings={filteredRecordings ?? []}
+            notes={filteredNotes ?? []}
           />
         </section>
       </section>
