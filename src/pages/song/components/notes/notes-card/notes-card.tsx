@@ -1,13 +1,13 @@
 import { MdModeEdit, MdDelete } from 'react-icons/md'
 
-import type { NotesDetails } from '#globals/types/global-types'
+import type { NotesDetails, NoteFormInput } from '#globals/types/global-types'
 
 import styles from './notes-card.module.css'
 
 interface NotesCardProps {
   note: NotesDetails
   sectionTitle: string | null
-  handleOnEdit: (id: string, name: string) => void
+  handleOnEdit: (id: string, input: NoteFormInput) => void
   handleOnRemove: (id: string) => void
 }
 
@@ -33,7 +33,10 @@ export const NotesCard = ({ note, sectionTitle, handleOnRemove, handleOnEdit }: 
         <h2 className={styles.notesCardTitle}>{note.name}</h2>
 
         <div className={styles.notesCardHeaderButtons}>
-          <button className={styles.notesCardHeaderButton} onClick={() => handleOnEdit(note.id, note.name)}>
+          <button
+            className={styles.notesCardHeaderButton}
+            onClick={() => handleOnEdit(note.id, { name: note.name, content: note.content })}
+          >
             <MdModeEdit />
           </button>
 
