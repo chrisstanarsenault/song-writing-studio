@@ -1,7 +1,5 @@
 import { useId, useState } from 'react'
 
-import { IoClose } from 'react-icons/io5'
-
 import { Modal } from '#globals/components/modal-portal/modal-portal.tsx'
 import { GlobalButton } from '#globals/components/global-button/global-button.tsx'
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import type { RecordingDetails } from '#globals/types/global-types'
 
-import { AudioBarPlayer } from '../audio-bar-player/audio-bar-player'
+import { AudioBarPlayer } from '#pages/song/components/recordings/audio-bar-player/audio-bar-player'
 
 import styles from './recording-card.module.css'
 

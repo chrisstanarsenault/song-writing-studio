@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 
-import { RecordingContainer } from '#pages/song/components/recording-container/recording-container.tsx'
-import { NotesContainer } from '#pages/song/components/notes-container/notes-container.tsx'
+import { RecordingContainer } from '#pages/song/components/recordings/recording-container/recording-container'
+import { NotesContainer } from '#pages/song/components/notes/notes-container/notes-container'
 
-import type { LyricsSection, RecordingDetails } from '#globals/types/global-types.tsx'
+import type { LyricsSection, RecordingDetails, NotesDetails } from '#globals/types/global-types.tsx'
 
 import styles from './recording-notes-container.module.css'
 
@@ -13,7 +12,7 @@ interface RecordingNotesContainerProps {
   sectionId: string | null
   sections: LyricsSection[]
   recordings: RecordingDetails[]
-  notes: Note[]
+  notes: NotesDetails[]
 }
 
 type Tab = 'recordings' | 'notes'

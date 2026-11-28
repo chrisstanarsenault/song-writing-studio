@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { GlobalButton } from '#globals/components/global-button/global-button'
-import { RecordingModal } from '#pages/song/components/recording-modal/recording-modal.tsx'
-import { UpdateRecordingModal } from '#pages/song/components/update-recording-modal/update-recording-modal.tsx'
-import { RecordingCard } from '#pages/song/components/recording-card/recording-card.tsx'
+import { RecordingModal } from '#pages/song/components/recordings/recording-modal/recording-modal'
+import { UpdateRecordingModal } from '#pages/song/components/recordings/update-recording-modal/update-recording-modal'
+import { RecordingCard } from '#pages/song/components/recordings/recording-card/recording-card'
 
 import { addRecording, updateRecording, deleteRecording } from '#features/recordings/recording-data.ts'
 
